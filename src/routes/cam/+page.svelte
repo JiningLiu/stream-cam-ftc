@@ -268,7 +268,7 @@
 						break;
 				}
 				console.log(
-					'FIELD-DEBUG',
+					'SWTICHER DEBUG',
 					'prior state: ' + parseState(priorState),
 					'post state: ' + parseState(state),
 					'method: ' + type,

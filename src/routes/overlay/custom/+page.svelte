@@ -374,15 +374,18 @@
 					console.log(sortedChaos);
 					started = true;
 
-					let maxTS: number = 0; //finds the highest TS value
 					let maxIndex: number = -1; //finds the index of the highest TS
 
 					let maxStartTS: number = 0; //get the most recent start match
 
 					//last index of a start_match
+					if(sortedChaos.length == 0){
+						console.log('No data found');
+						return;
+					}
 					for (let i = sortedChaos.length - 1; i >= 0; i--) {
 						if ((JSON.parse(sortedChaos[i].data)['type'] as string) == 'START_MATCH') {
-							// maxStartTS = JSON.parse(sortedChaos[i].data)['ts'];
+							maxStartTS = JSON.parse(sortedChaos[i].data)['ts']; //why was this commented?
 							break;
 						}
 					}
@@ -469,16 +472,17 @@
 		// timer.reset();
 		console.log('endgame');
 		state = State.AWAIT_RESULTS;
-
+		mode = 'Reviewing...';
 		matchTimeout = undefined;
 	};
 
 	let closeResults = () => {
+
 		beforeTeleop = true;
 		let oldState = parseState(state);
 		timer.reset(); //just in case
 		beforeTeleop = true;
-		mode = 'Scoring...';
+		mode = 'Standby.';
 		state = State.AWAIT_MATCH;
 		console.log(
 			'DEBUG INFO',
@@ -536,7 +540,7 @@
 				let oldState = parseState(state);
 				switch (state) {
 					case State.PRE_START:
-						timer.reset();
+						timer.clear();
 						if (type == 'SHOW_PREVIEW' || type == 'SHOW_MATCH') {
 							showMatch(field);
 							data = JSON.parse(message.data);
@@ -575,6 +579,7 @@
 						}
 						break;
 					case State.AWAIT_RESULTS:
+						timer.clear();
 						if (type == 'SHOW_RESULTS') {
 							state = State.RESULTS_SHOWN;
 							resultsTimeout = setTimeout(closeResults, 20000);
@@ -587,6 +592,7 @@
 						}
 						break;
 					case State.RESULTS_SHOWN:
+						timer.clear();
 						if (type == 'START_MATCH') {
 							clearTimeout(resultsTimeout);
 							resultsTimeout = undefined;
@@ -651,7 +657,7 @@
 						break;
 				}
 				console.log(
-					'DEBUG INFO',
+					'STREAM DEBUG',
 					'prior:' + oldState,
 					'post: ' + parseState(state),
 					'type: ' + type
