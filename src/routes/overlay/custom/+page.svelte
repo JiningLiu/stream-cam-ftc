@@ -228,10 +228,8 @@
 
 		//only for use of the special start match
 		setTime(timeElapsed: number, beginTime: number): void {
-			console.log('av2', 'timeElapse: ' + timeElapsed, 'beginTime: ' + beginTime);
 			this.timerRunning = true;
 			if (timeElapsed >= 158) {
-				console.log('over');
 				this.clear();
 				mode = 'Standby';
 				beforeTeleop = false;
@@ -240,7 +238,6 @@
 			else if (timeElapsed >= 38) {
 				this.startTime = beginTime + 38000;
 
-				console.log('tele');
 				this.currentStateIndex = 2;
 				mode = 'TeleOp';
 				beforeTeleop = false;
@@ -249,7 +246,6 @@
 			else if (timeElapsed >= 30) {
 				this.startTime = beginTime + 30000;
 
-				console.log('trans');
 				this.currentStateIndex = 1;
 				mode = 'Wait';
 				beforeTeleop = true;
@@ -369,11 +365,14 @@
 
 			socket.onopen = () => {
 				setTimeout(() => {
+					started = true;
+
 					let sortedChaos = chaosArray.sort((a, b) => {
 						return JSON.parse(a.data)['ts'] - JSON.parse(b.data)['ts'];
+					}).filter((a) => {
+						return processingTypes.includes(JSON.parse(a.data)['type']);
 					});
-
-					started = true;
+					console.log(sortedChaos);
 
 					let maxIndex: number = -1; //finds the index of the highest TS
 
@@ -390,45 +389,22 @@
 							break;
 						}
 					}
-					if (JSON.parse(sortedChaos[sortedChaos.length - 1].data)['type'] == 'SCORE_UPDATE') {
+					maxIndex = sortedChaos.length - 1;
+
+					if (JSON.parse(sortedChaos[sortedChaos.length - 1].data)['type'] == 'SCORE_UPDATE' ||
+					 JSON.parse(sortedChaos[sortedChaos.length - 1].data)['type'] == 'START_MATCH') {
 						for (let i = sortedChaos.length - 1; i >= 0; i--) {
+							console.log(JSON.parse(sortedChaos[i].data)['type']);
 							if (JSON.parse(sortedChaos[i].data)['type'] == 'START_MATCH') {
-								maxIndex = sortedChaos.length - 1;
+								console.log("found start");
 								break;
 							} else if (JSON.parse(sortedChaos[i].data)['type'] == 'ABORT_MATCH') {
+								console.log("found abort");
 								maxIndex = i;
 								break;
 							}
 						}
 					}
-					//
-					for (let i = sortedChaos.length - 1; i >= 0; i--) {
-						if (
-							JSON.parse(sortedChaos[i].data)['type'] == 'START_MATCH' ||
-							JSON.parse(sortedChaos[i].data)['type'] == 'SCORE_UPDATE'
-						) {
-							maxIndex = i;
-							break;
-						}
-					}
-					// for (let index = 0; index < chaosArray.length; index++) {
-					// 	let num = JSON.parse(chaosArray[index].data)['ts'];
-
-					// 	if (!processingTypes.includes(JSON.parse(chaosArray[index].data)['type'])) {
-					// 		console.log('Invalid data type: ',JSON.parse(chaosArray[index].data)['type']);
-					// 		continue;
-					// 	}
-					// 	if (JSON.parse(chaosArray[index].data)['type'] == 'START_MATCH') {
-					// 		if (maxStartTS < num) {
-
-					// 			maxStartTS = JSON.parse(chaosArray[index].data)['ts'];
-					// 		}
-					// 	}
-					// 	if (maxTS < num) {
-					// 		maxIndex = index;
-					// 		maxTS = JSON.parse(chaosArray[index].data)['ts'];
-					// 	}
-					// }
 					if (maxIndex == -1) {
 						console.log('No valid data found');
 						return;
@@ -436,7 +412,7 @@
 					let recentData = JSON.parse(chaosArray[maxIndex].data);
 
 					// console.log(JSON.parse(chaosArray[maxIndex].data)['type']);
-					console.log(recentData['type']);
+					console.log("recent data type:",recentData['type']);
 					if (recentData['type'] == 'START_MATCH' || recentData['type'] == 'SCORE_UPDATE') {
 						data = JSON.parse(chaosArray[maxIndex].data);
 						timer.setTime((Date.now() - maxStartTS) / 1000, maxStartTS - Date.now());
