@@ -45,6 +45,7 @@
 	}
 
 	enum ResultsState {
+		PRE_START,
 		NO_RESULTS,
 		AWAIT_FULL,
 		AWAIT_MINI,
@@ -55,7 +56,7 @@
 	let current = 1;
 
 	let state: State = State.PRE_START;
-	let resultsState: ResultsState = ResultsState.NO_RESULTS;
+	let resultsState: ResultsState = ResultsState.PRE_START;
 
 	let matchTimeout: number | undefined;
 	let resultsTimeout: number | undefined;
@@ -371,7 +372,7 @@
 					let sortedChaos = chaosArray.sort((a, b) => {
 						return JSON.parse(a.data)['ts'] - JSON.parse(b.data)['ts'];
 					});
-					console.log(sortedChaos);
+
 					started = true;
 
 					let maxIndex: number = -1; //finds the index of the highest TS
@@ -469,7 +470,7 @@
 	});
 
 	let endGame = () => {
-		// timer.reset();
+		timer.clear();
 		console.log('endgame');
 		state = State.AWAIT_RESULTS;
 		mode = 'Reviewing...';
@@ -482,7 +483,7 @@
 		let oldState = parseState(state);
 		timer.reset(); //just in case
 		beforeTeleop = true;
-		mode = 'Standby.';
+		mode = 'Standby';
 		state = State.AWAIT_MATCH;
 		console.log(
 			'DEBUG INFO',
@@ -496,7 +497,7 @@
 
 	let showMatch = (field: number) => {
 		let oldState = parseState(state);
-		timer.reset(); //just in case
+		timer.clear(); //just in case
 		beforeTeleop = true;
 		mode = 'Standby';
 		state = State.AWAIT_MATCH;
@@ -610,6 +611,13 @@
 				}
 
 				switch (resultsState) {
+					case ResultsState.PRE_START:
+						if (type == 'SHOW_RESULTS') {
+							resultsState = ResultsState.FULL_RESULTS;
+						}else{
+							resultsState = ResultsState.NO_RESULTS;
+						}
+						break;
 					case ResultsState.NO_RESULTS:
 						resultsData = undefined;
 						if (state == State.AWAIT_RESULTS) {
@@ -660,14 +668,14 @@
 					'STREAM DEBUG',
 					'prior:' + oldState,
 					'post: ' + parseState(state),
-					'type: ' + type
+					'type: ' + type, "resultsState: " + ResultsState[resultsState]
 				);
 			} else {
 				console.log('Invalid data type: ', type);
 				console.log('Data: ', JSON.parse(message.data));
 			}
 		} catch (e) {
-			// console.error(e);
+			// console.error(e)
 		}
 	}
 </script>
