@@ -49,6 +49,8 @@ curl 'http://localhost:6400/ftc' \
 
 The `ftc` extension will now be ready at `http://localhost:6401/` (Replace `localhost` with stream-cam server hostname).
 
+> To receive audio from the official overlay, user interaction is required. You can click on the iframe at the root path to enable audio. (The official overlay has an opacity of 0)
+
 ## License
 
 Open source information to come. Planned release under the MIT License.

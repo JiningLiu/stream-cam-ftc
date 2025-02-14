@@ -43,7 +43,7 @@
 	let wholeJawnUrl = '';
 	let camUrl = '';
 	let overlayUrl = '';
-	let importOverlayUrl = '';
+	let importJawnsUrl = '';
 
 	onMount(() => {
 		updateCam();
@@ -170,36 +170,59 @@
 		navigator.clipboard.writeText(overlayUrl);
 	}
 
-	function importFromOverlayUrl() {
-		const url = new URL(importOverlayUrl);
+	function importFromJawnsUrl() {
+		const url = new URL(importJawnsUrl);
 		const tlp = new URLSearchParams(url.search);
-		const params = new URLSearchParams(`?${tlp.get('parameters')}`);
 
-		overlayInfoBannerText = params.get('infoBannerText') || '';
-		overlayBlueSampleNetX = params.get('blueSampleNetX') || '';
-		overlayBlueSampleNetY = params.get('blueSampleNetY') || '';
-		overlayBlueSampleLowX = params.get('blueSampleLowX') || '';
-		overlayBlueSampleLowY = params.get('blueSampleLowY') || '';
-		overlayBlueSampleHighX = params.get('blueSampleHighX') || '';
-		overlayBlueSampleHighY = params.get('blueSampleHighY') || '';
-		overlayBlueSpecimenLowX = params.get('blueSpecimenLowX') || '';
-		overlayBlueSpecimenLowY = params.get('blueSpecimenLowY') || '';
-		overlayBlueSpecimenHighX = params.get('blueSpecimenHighX') || '';
-		overlayBlueSpecimenHighY = params.get('blueSpecimenHighY') || '';
-		overlayRedSampleNetX = params.get('redSampleNetX') || '';
-		overlayRedSampleNetY = params.get('redSampleNetY') || '';
-		overlayRedSampleLowX = params.get('redSampleLowX') || '';
-		overlayRedSampleLowY = params.get('redSampleLowY') || '';
-		overlayRedSampleHighX = params.get('redSampleHighX') || '';
-		overlayRedSampleHighY = params.get('redSampleHighY') || '';
-		overlayRedSpecimenLowX = params.get('redSpecimenLowX') || '';
-		overlayRedSpecimenLowY = params.get('redSpecimenLowY') || '';
-		overlayRedSpecimenHighX = params.get('redSpecimenHighX') || '';
-		overlayRedSpecimenHighY = params.get('redSpecimenHighY') || '';
+		camDetails = [];
+		const camParams = new URLSearchParams(`?${decodeURIComponent(tlp.get('camParams') || '')}`);
+		camParams
+			.get('streams')
+			?.split(',')
+			.forEach((stream) => {
+				const url = new URL(decodeURIComponent(stream));
+				camDetails = [
+					...camDetails,
+					{
+						host: url.hostname,
+						port: url.port,
+						path: url.pathname.replace('/', '')
+					}
+				];
+			});
+		updateCam();
 
+		const overlayParams = new URLSearchParams(
+			`?${decodeURIComponent(tlp.get('overlayParams') || '')}`
+		);
+		overlayInfoBannerText = overlayParams.get('infoBannerText') || '';
+		overlayBlueSampleNetX = overlayParams.get('blueSampleNetX') || '';
+		overlayBlueSampleNetY = overlayParams.get('blueSampleNetY') || '';
+		overlayBlueSampleLowX = overlayParams.get('blueSampleLowX') || '';
+		overlayBlueSampleLowY = overlayParams.get('blueSampleLowY') || '';
+		overlayBlueSampleHighX = overlayParams.get('blueSampleHighX') || '';
+		overlayBlueSampleHighY = overlayParams.get('blueSampleHighY') || '';
+		overlayBlueSpecimenLowX = overlayParams.get('blueSpecimenLowX') || '';
+		overlayBlueSpecimenLowY = overlayParams.get('blueSpecimenLowY') || '';
+		overlayBlueSpecimenHighX = overlayParams.get('blueSpecimenHighX') || '';
+		overlayBlueSpecimenHighY = overlayParams.get('blueSpecimenHighY') || '';
+		overlayRedSampleNetX = overlayParams.get('redSampleNetX') || '';
+		overlayRedSampleNetY = overlayParams.get('redSampleNetY') || '';
+		overlayRedSampleLowX = overlayParams.get('redSampleLowX') || '';
+		overlayRedSampleLowY = overlayParams.get('redSampleLowY') || '';
+		overlayRedSampleHighX = overlayParams.get('redSampleHighX') || '';
+		overlayRedSampleHighY = overlayParams.get('redSampleHighY') || '';
+		overlayRedSpecimenLowX = overlayParams.get('redSpecimenLowX') || '';
+		overlayRedSpecimenLowY = overlayParams.get('redSpecimenLowY') || '';
+		overlayRedSpecimenHighX = overlayParams.get('redSpecimenHighX') || '';
+		overlayRedSpecimenHighY = overlayParams.get('redSpecimenHighY') || '';
 		updateOverlay();
 	}
 </script>
+
+<head>
+	<link rel="stylesheet" href="/global.css" />
+</head>
 
 <main>
 	<div class="vstack hcenter s1 mv1">
@@ -433,30 +456,20 @@
 				<button on:click={copyOverlayUrl}>Copy Overlay URL</button>
 
 				<div class="vstack">
-					<p>Import Overlay</p>
-					<input type="text" bind:value={importOverlayUrl} />
+					<p>Import Jawns</p>
+					<input type="text" bind:value={importJawnsUrl} />
 				</div>
-				<button on:click={importFromOverlayUrl}>Import from Overlay URL</button>
+				<button on:click={importFromJawnsUrl}>Import from Jawns URL</button>
 			</div>
 		</div>
 	</div>
 </main>
 
 <style>
-	@media (max-aspect-ratio: 16 / 9) {
-		.zstack,
-		iframe {
-			width: 100vw;
-			height: calc(100vw / 16 * 9);
-		}
-	}
-
-	@media (min-aspect-ratio: 16 / 9) {
-		.zstack,
-		iframe {
-			width: calc(100vh / 9 * 16);
-			height: 100vh;
-		}
+	.zstack,
+	iframe {
+		width: 100vw;
+		height: calc(100vw / 16 * 9);
 	}
 
 	#overlay {

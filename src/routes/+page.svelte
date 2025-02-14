@@ -15,6 +15,10 @@
 	});
 </script>
 
+<head>
+	<link rel="stylesheet" href="/global.css" />
+</head>
+
 <main class="zstack">
 	{#if camParams}
 		<iframe src="/cam?parameters={camParams}" frameborder="0" title="Camera Switcher" id="cam"></iframe>
