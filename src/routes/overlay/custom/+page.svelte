@@ -478,7 +478,7 @@
 		let oldState = parseState(state);
 		timer.reset(); //just in case
 		beforeTeleop = true;
-		mode = 'Standby';
+		mode = 'Scoring...';
 		state = State.AWAIT_MATCH;
 		console.log(
 			'DEBUG INFO',
@@ -549,8 +549,12 @@
 						}
 						break;
 					case State.AWAIT_MATCH:
-						if (type != 'SHOW_PREVIEW' && type != 'SHOW_RESULTS' && type != 'SCORE_UPDATE') {
+						if (type != 'SHOW_PREVIEW' && type != 'SHOW_RESULTS' && type != 'SCORE_UPDATE' && type != 'ABORT_MATCH') {
 							data = JSON.parse(message.data);
+							mode = 'Standby';
+						}else if(type == 'ABORT_MATCH'){
+							data = JSON.parse(message.data);
+							mode = 'Aborted';
 						}
 						if (type == 'START_MATCH') {
 							startMatch(field);
