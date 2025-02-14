@@ -40,10 +40,10 @@
 	let overlayRedSpecimenHighX = '';
 	let overlayRedSpecimenHighY = '';
 
-	let wholeJawnUrl = '';
+	let entireUrl = '';
 	let camUrl = '';
 	let overlayUrl = '';
-	let importJawnsUrl = '';
+	let importUrl = '';
 
 	onMount(() => {
 		updateCam();
@@ -86,7 +86,7 @@
 		try {
 			const camParams = new URL(camUrl).search.replace('?parameters=', '');
 			const overlayParams = new URL(overlayUrl).search.replace('?parameters=', '');
-			wholeJawnUrl = `http://${encodeURIComponent(location.hostname)}${
+			entireUrl = `http://${encodeURIComponent(location.hostname)}${
 				encodeURIComponent(location.port) ? ':' : ''
 			}${encodeURIComponent(location.port)}/?camParams=${encodeURIComponent(camParams)}&overlayParams=${encodeURIComponent(overlayParams)}`;
 		} catch {}
@@ -147,7 +147,7 @@
 		try {
 			const camParams = new URL(camUrl).search.replace('?parameters=', '');
 			const overlayParams = new URL(overlayUrl).search.replace('?parameters=', '');
-			wholeJawnUrl = `http://${encodeURIComponent(location.hostname)}${
+			entireUrl = `http://${encodeURIComponent(location.hostname)}${
 				encodeURIComponent(location.port) ? ':' : ''
 			}${encodeURIComponent(location.port)}/?camParams=${encodeURIComponent(camParams)}&overlayParams=${encodeURIComponent(overlayParams)}`;
 		} catch {}
@@ -158,8 +158,8 @@
 		}
 	}
 
-	function copyWholeJawnUrl() {
-		navigator.clipboard.writeText(wholeJawnUrl);
+	function copyEntireUrl() {
+		navigator.clipboard.writeText(entireUrl);
 	}
 
 	function copyCamUrl() {
@@ -170,8 +170,8 @@
 		navigator.clipboard.writeText(overlayUrl);
 	}
 
-	function importFromJawnsUrl() {
-		const url = new URL(importJawnsUrl);
+	function importFromUrl() {
+		const url = new URL(importUrl);
 		const tlp = new URLSearchParams(url.search);
 
 		camDetails = [];
@@ -438,10 +438,10 @@
 
 			<div class="hstack s1">
 				<div class="vstack">
-					<p>Whole Jawn</p>
-					<input type="text" bind:value={wholeJawnUrl} readonly />
+					<p>Entire Url</p>
+					<input type="text" bind:value={entireUrl} readonly />
 				</div>
-				<button on:click={copyWholeJawnUrl}>Copy Whole Jawn URL</button>
+				<button on:click={copyEntireUrl}>Copy the Entire URL</button>
 
 				<div class="vstack">
 					<p>Cameras</p>
@@ -456,10 +456,10 @@
 				<button on:click={copyOverlayUrl}>Copy Overlay URL</button>
 
 				<div class="vstack">
-					<p>Import Jawns</p>
-					<input type="text" bind:value={importJawnsUrl} />
+					<p>Import From Url</p>
+					<input type="text" bind:value={importUrl} />
 				</div>
-				<button on:click={importFromJawnsUrl}>Import from Jawns URL</button>
+				<button on:click={importFromUrl}>Import from  URL</button>
 			</div>
 		</div>
 	</div>
