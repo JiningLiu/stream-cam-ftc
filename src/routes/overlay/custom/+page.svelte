@@ -449,7 +449,7 @@
 		timer.clear();
 		console.log('endgame');
 		state = State.AWAIT_RESULTS;
-		mode = 'Reviewing...';
+		mode = 'In Review';
 		matchTimeout = undefined;
 	};
 

@@ -8,7 +8,7 @@
 
 		const element = document.querySelector('overlay #infoBanner') as HTMLHeadingElement;
 		if (element) {
-			element.style.setProperty('--size-modifier', String(Math.sqrt(text.length) * 2.5));
+			element.style.setProperty('--size-modifier', String(Math.sqrt(text.length) * 2.55));
 		}
 	});
 </script>

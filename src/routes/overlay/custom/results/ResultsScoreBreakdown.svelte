@@ -56,32 +56,6 @@
 		}
 		return '--';
 	}
-
-	function longestAutoLocation(): string {
-		const locations = [blue1AutoLocation, blue2AutoLocation, red1AutoLocation, red2AutoLocation];
-		return findLongestLocation(locations);
-	}
-
-	function longestTeleopLocation(): string {
-		const locations = [
-			blue1TeleopLocation,
-			blue2TeleopLocation,
-			red1TeleopLocation,
-			red2TeleopLocation
-		];
-		return findLongestLocation(locations);
-	}
-
-	function findLongestLocation(locations: string[]): string {
-		let longest = '';
-		for (let loc of locations) {
-			const location = process(loc);
-			if (location.length > longest.length) {
-				longest = location;
-			}
-		}
-		return longest;
-	}
 </script>
 
 <container>
@@ -251,13 +225,12 @@
 		<separator class={hideDetails ? 'mt08' : 0}></separator>
 
 		<div class="hstack hcenter fouls">
-			<h3 class="blue-fouls">{+blueFoulsReceived > 0 ? '+' : ''}{blueFoulsReceived}</h3>
+			<h3 class="blue-fouls w-100">{+blueFoulsReceived > 0 ? '+' : ''}{blueFoulsReceived}</h3>
 			<h3>Fouls</h3>
-			<h3 class="red-fouls">{+redFoulsReceived > 0 ? '+' : ''}{redFoulsReceived}</h3>
+			<h3 class="red-fouls w-100">{+redFoulsReceived > 0 ? '+' : ''}{redFoulsReceived}</h3>
 		</div>
 	</div>
-	</container
->
+</container>
 <slot />
 
 <style>
@@ -336,8 +309,15 @@
 	}
 
 	.fouls {
-		width: 45.6vw;
 		margin-top: -0.2vw;
+
+		.blue-fouls {
+			text-align: right;
+		}
+
+		.red-fouls {
+			text-align: left;
+		}
 	}
 
 	.blue-fouls {

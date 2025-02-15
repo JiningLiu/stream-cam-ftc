@@ -12,7 +12,7 @@
 </script>
 
 <container>
-	<h4 class="results">{text} • Final Results</h4>
+	<h4 class="results">{text}</h4>
 </container>
 <slot />
 
@@ -21,9 +21,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 42.5vw;
+		width: 46vw;
 		height: 3.2vw;
 		margin: 0;
+		padding: 0 0.4vw;
 		color: #fff;
 		background-color: #111;
 		border-radius: 1.2vw;

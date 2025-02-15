@@ -21,7 +21,8 @@
 
 <main class="zstack">
 	{#if camParams}
-		<iframe src="/cam?parameters={camParams}" frameborder="0" title="Camera Switcher" id="cam"></iframe>
+		<iframe src="/cam?parameters={camParams}" frameborder="0" title="Camera Switcher" id="cam"
+		></iframe>
 	{/if}
 
 	{#if overlayParams}
@@ -42,21 +43,23 @@
 	}
 
 	main {
+		* {
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		
 		@media (min-aspect-ratio: 16 / 9) {
 			* {
-				left: 50%;
 				width: calc(100vh / 9 * 16);
 				height: 100vh;
-				transform: translate(-50%, 0);
 			}
 		}
 
 		@media (max-aspect-ratio: 16 / 9) {
 			* {
-				top: 50%;
 				width: 100vw;
 				height: calc(100vw / 16 * 9);
-				transform: translate(0, -50%);
 			}
 		}
 	}
