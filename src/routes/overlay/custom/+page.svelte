@@ -372,16 +372,13 @@
 					}).filter((a) => {
 						return processingTypes.includes(JSON.parse(a.data)['type']);
 					});
-					console.log(sortedChaos.map((a) => {
-						return JSON.parse(a.data)['type'];
-					}));
 					let maxIndex: number = sortedChaos.length - 1; //finds the index of the highest TS
 
 					let maxStartTS: number = 0; //get the most recent start match
 
 					//last index of a start_match
 					if(sortedChaos.length == 0){
-						console.log('No data found');
+						console.log('No valid data found');
 						return;
 					}
 					for (let i = sortedChaos.length - 1; i >= 0; i--) {
@@ -393,25 +390,20 @@
 					console.log("lastIndex",JSON.parse(sortedChaos[maxIndex].data)['type']);
 					if (JSON.parse(sortedChaos[sortedChaos.length - 1].data)['type'] == 'SCORE_UPDATE') {
 						for (let i = sortedChaos.length - 1; i >= 0; i--) {
-							console.log(JSON.parse(sortedChaos[i].data)['type']);
+							// console.log(JSON.parse(sortedChaos[i].data)['type']);
 							if (JSON.parse(sortedChaos[i].data)['type'] == 'START_MATCH') {
-								console.log("found start");
+								// console.log("found start");
 								break;
 							} else if (JSON.parse(sortedChaos[i].data)['type'] == 'ABORT_MATCH') {
-								console.log("found abort");
+								// console.log("found abort");
 								maxIndex = i;
 								break;
 							}
 						}
 					}
-					if (maxIndex == -1) {
-						console.log('No valid data found');
-						return;
-					}
 					let recentData = JSON.parse(sortedChaos[maxIndex].data);
 
-					// console.log(JSON.parse(chaosArray[maxIndex].data)['type']);
-					console.log("recent data type:",recentData['type']);
+					// console.log("recent data type:",recentData['type']);
 					if (recentData['type'] == 'START_MATCH' || recentData['type'] == 'SCORE_UPDATE') {
 						data = JSON.parse(sortedChaos[maxIndex].data);
 						timer.setTime((Date.now() - maxStartTS) / 1000, maxStartTS - Date.now());
@@ -446,10 +438,17 @@
 
 	let endGame = () => {
 		timer.clear();
-		console.log('endgame');
+		let oldState = parseState(state);
+		// console.log('endgame');
 		state = State.AWAIT_RESULTS;
 		mode = 'In Review';
 		matchTimeout = undefined;
+		console.log(
+			'OVERLAY DEBUG',
+			'prior:' + oldState,
+			'post: ' + parseState(state),
+			'type: endGame'
+		);
 	};
 
 	let closeResults = () => {
@@ -461,7 +460,7 @@
 		mode = 'Standby';
 		state = State.AWAIT_MATCH;
 		console.log(
-			'DEBUG INFO',
+			'OVERLAY DEBUG',
 			'prior:' + oldState,
 			'post: ' + parseState(state),
 			'type: closeResults'
@@ -478,7 +477,7 @@
 		state = State.AWAIT_MATCH;
 		current = field;
 		console.log(
-			'DEBUG INFO',
+			'OVERLAY DEBUG',
 			'prior:' + oldState,
 			'post: ' + parseState(state),
 			'type: showMethod'
@@ -500,7 +499,7 @@
 		matchTimeout = setTimeout(endGame, 158000);
 		state = State.IN_MATCH;
 		console.log(
-			'DEBUG INFO',
+			'OVERLAY DEBUG',
 			'prior:' + oldState,
 			'post: ' + parseState(state),
 			'type: startMethod'
@@ -524,6 +523,7 @@
 							startMatch(field);
 							data = JSON.parse(message.data);
 						} else if (type == 'SHOW_RESULTS') {
+							resultsData = JSON.parse(message.data);
 							state = State.RESULTS_SHOWN;
 							resultsTimeout = setTimeout(closeResults, 20000);
 						}
@@ -557,6 +557,7 @@
 					case State.AWAIT_RESULTS:
 						timer.clear();
 						if (type == 'SHOW_RESULTS') {
+							resultsData = JSON.parse(message.data);
 							state = State.RESULTS_SHOWN;
 							resultsTimeout = setTimeout(closeResults, 20000);
 						} else if (type == 'START_MATCH') {
@@ -588,6 +589,9 @@
 				switch (resultsState) {
 					case ResultsState.PRE_START:
 						if (type == 'SHOW_RESULTS') {
+							resultsData = JSON.parse(message.data);
+
+							showFullResults = true;
 							resultsState = ResultsState.FULL_RESULTS;
 						}else{
 							resultsState = ResultsState.NO_RESULTS;
@@ -646,8 +650,8 @@
 					'type: ' + type, "resultsState: " + ResultsState[resultsState]
 				);
 			} else {
-				console.log('Invalid data type: ', type);
-				console.log('Data: ', JSON.parse(message.data));
+				// console.log('Invalid data type: ', type);
+				// console.log('Data: ', JSON.parse(message.data));
 			}
 		} catch (e) {
 			// console.error(e)
