@@ -372,9 +372,10 @@
 					}).filter((a) => {
 						return processingTypes.includes(JSON.parse(a.data)['type']);
 					});
-					console.log(sortedChaos);
-
-					let maxIndex: number = -1; //finds the index of the highest TS
+					console.log(sortedChaos.map((a) => {
+						return JSON.parse(a.data)['type'];
+					}));
+					let maxIndex: number = sortedChaos.length - 1; //finds the index of the highest TS
 
 					let maxStartTS: number = 0; //get the most recent start match
 
@@ -389,10 +390,8 @@
 							break;
 						}
 					}
-					maxIndex = sortedChaos.length - 1;
-
-					if (JSON.parse(sortedChaos[sortedChaos.length - 1].data)['type'] == 'SCORE_UPDATE' ||
-					 JSON.parse(sortedChaos[sortedChaos.length - 1].data)['type'] == 'START_MATCH') {
+					console.log("lastIndex",JSON.parse(sortedChaos[maxIndex].data)['type']);
+					if (JSON.parse(sortedChaos[sortedChaos.length - 1].data)['type'] == 'SCORE_UPDATE') {
 						for (let i = sortedChaos.length - 1; i >= 0; i--) {
 							console.log(JSON.parse(sortedChaos[i].data)['type']);
 							if (JSON.parse(sortedChaos[i].data)['type'] == 'START_MATCH') {
@@ -409,21 +408,21 @@
 						console.log('No valid data found');
 						return;
 					}
-					let recentData = JSON.parse(chaosArray[maxIndex].data);
+					let recentData = JSON.parse(sortedChaos[maxIndex].data);
 
 					// console.log(JSON.parse(chaosArray[maxIndex].data)['type']);
 					console.log("recent data type:",recentData['type']);
 					if (recentData['type'] == 'START_MATCH' || recentData['type'] == 'SCORE_UPDATE') {
-						data = JSON.parse(chaosArray[maxIndex].data);
+						data = JSON.parse(sortedChaos[maxIndex].data);
 						timer.setTime((Date.now() - maxStartTS) / 1000, maxStartTS - Date.now());
 						state = State.IN_MATCH;
 						matchTimeout = setTimeout(endGame, 158000 + maxStartTS - Date.now());
 					} else if (recentData['type'] == 'SHOW_PREVIEW' || recentData['type'] == 'SHOW_MATCH') {
-						data = JSON.parse(chaosArray[maxIndex].data);
+						data = JSON.parse(sortedChaos[maxIndex].data);
 						mode = 'Standby';
 						state = State.AWAIT_MATCH;
 					} else {
-						fieldUpdate(chaosArray[maxIndex]);
+						fieldUpdate(sortedChaos[maxIndex]);
 					}
 				}, 1000);
 				console.log('FTCLive display WebSocket connected.');
