@@ -437,7 +437,12 @@
 	});
 
 	let endGame = () => {
-		if (data && data['params'] && data['params']['matchName']) {
+		if (
+			data &&
+			data['params'] &&
+			data['params']['matchName'] &&
+			!awaitResults.includes(data['params']['matchName'])
+		) {
 			awaitResults = [...awaitResults, data['params']['matchName']];
 		}
 
