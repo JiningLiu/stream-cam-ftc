@@ -11,14 +11,14 @@
 		{
 			host: 'localhost',
 			port: '5173',
-			path: 'test1'
+			path: 'cam/test1'
 		}
 	];
 
 	let overlaySocketHost = 'localhost';
-	let overlayEventCode = 'ustxauq';
+	let overlayEventCode = 'ustxtbsq';
 
-	let overlayInfoBannerText = 'FiT-Central Semi-Area Championship';
+	let overlayInfoBannerText = 'FiT-Central Regional Championship';
 	let overlayBlueSampleNetX = '';
 	let overlayBlueSampleNetY = '';
 	let overlayBlueSampleLowX = '';
@@ -241,7 +241,7 @@
 							{
 								host: 'localhost',
 								port: '5173',
-								path: 'test2'
+								path: 'cam/test2'
 							}
 						];
 						updateCam();
@@ -340,7 +340,7 @@
 						class="overlay"
 						type="text"
 						bind:value={overlayInfoBannerText}
-						placeholder="FiT-Central Semi-Area Championship"
+						placeholder="FiT-Central Regional Championship"
 					/>
 				</div>
 			</div>

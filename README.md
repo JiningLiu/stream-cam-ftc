@@ -43,8 +43,7 @@ Boot up the `stream-cam` server as usual. In order to start the extension, a `PO
 
 ```bash
 # replace localhost with stream-cam server hostname
-curl 'http://localhost:6400/ftc' \
--X 'POST'
+curl 'http://localhost:6400/ftc' -X 'POST'
 ```
 
 The `ftc` extension will now be ready at `http://localhost:6401/` (Replace `localhost` with stream-cam server hostname).

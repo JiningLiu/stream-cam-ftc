@@ -16,7 +16,9 @@ body {
 
 main,
 overlay,
-results {
+results,
+await-mini-results,
+mini-results {
 	position: absolute;
 	top: calc((100vh - (100vw / 16 * 9)) / 4);
 	width: 100vw;
@@ -29,17 +31,13 @@ results {
 }
 
 * {
-	transition: all 0.5s ease-in-out;
+	transform-origin: top;
+	transition: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+	transition-duration: 0.4s;
+	transition-property: position max-height transform opacity margin;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-span,
-p {
+* {
 	margin: 0;
 	padding: 0;
 }
@@ -67,6 +65,10 @@ p {
 
 .hcenter {
 	justify-content: center;
+}
+
+.space-between {
+	justify-content: space-between;
 }
 
 .vgrid {
