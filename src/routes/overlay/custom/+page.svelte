@@ -385,7 +385,6 @@
 					})();
 
 					if (!latestData) return;
-					console.log(latestData);
 
 					if (
 						(latestData['type'] == 'START_MATCH' || latestData['type'] == 'SCORE_UPDATE') &&
@@ -662,8 +661,6 @@
 		} else {
 			displayAwaitResults = awaitResults;
 		}
-
-		console.log(awaitResults);
 	}
 </script>
 

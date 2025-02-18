@@ -85,10 +85,6 @@
 		}
 		return '--';
 	}
-
-	$effect(() => {
-		console.log('results state', state);
-	});
 </script>
 
 <container>

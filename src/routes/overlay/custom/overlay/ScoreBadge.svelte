@@ -65,6 +65,10 @@
 			height: 1.6vw;
 			align-items: center;
 			width: 100%;
+
+			h4 {
+				transform-origin: center;
+			}
 		}
 	}
 
