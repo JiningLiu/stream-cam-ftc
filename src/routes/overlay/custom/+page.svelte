@@ -268,10 +268,12 @@
 	const timer = new CountdownTimer();
 
 	let socket: WebSocket;
+
+	let startX = 0; //temp x for drag
+	let startY = 0; //temp y for drag
+
 	onMount(() => {
-		console.log("hi")
-		let globalX = 0; //temp x for drag
-		let globalY = 0; //temp y for drag
+		console.log('hi');
 
 		const paramsString = `?${new URLSearchParams(location.search).get('parameters')}`;
 		const params = new URLSearchParams(paramsString);
@@ -287,80 +289,15 @@
 			blueSampleNet.style.setProperty('--x', params.get('blueSampleNetX'));
 			blueSampleNet.style.setProperty('--y', params.get('blueSampleNetY'));
 
-			blueSampleNet.setAttribute('draggable', 'true');
-
-			blueSampleNet.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			blueSampleNet.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(blueSampleNet);
 		}
 
 		const blueSampleLow = document.getElementById('blueSampleLow');
-
 		if (blueSampleLow) {
 			blueSampleLow.style.setProperty('--x', params.get('blueSampleLowX'));
 			blueSampleLow.style.setProperty('--y', params.get('blueSampleLowY'));
 
-
-			blueSampleLow.setAttribute('draggable', 'true');
-			blueSampleLow.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			blueSampleLow.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(blueSampleLow);
 		}
 
 		const blueSampleHigh = document.getElementById('blueSampleHigh');
@@ -368,38 +305,7 @@
 			blueSampleHigh.style.setProperty('--x', params.get('blueSampleHighX'));
 			blueSampleHigh.style.setProperty('--y', params.get('blueSampleHighY'));
 
-			blueSampleHigh.setAttribute('draggable', 'true');
-			blueSampleHigh.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			blueSampleHigh.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(blueSampleHigh);
 		}
 
 		const blueSpecimenLow = document.getElementById('blueSpecimenLow');
@@ -407,38 +313,7 @@
 			blueSpecimenLow.style.setProperty('--x', params.get('blueSpecimenLowX'));
 			blueSpecimenLow.style.setProperty('--y', params.get('blueSpecimenLowY'));
 
-			blueSpecimenLow.setAttribute('draggable', 'true');
-			blueSpecimenLow.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			blueSpecimenLow.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(blueSpecimenLow);
 		}
 
 		const blueSpecimenHigh = document.getElementById('blueSpecimenHigh');
@@ -446,76 +321,15 @@
 			blueSpecimenHigh.style.setProperty('--x', params.get('blueSpecimenHighX'));
 			blueSpecimenHigh.style.setProperty('--y', params.get('blueSpecimenHighY'));
 
-			blueSpecimenHigh.setAttribute('draggable', 'true');
-			blueSpecimenHigh.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			blueSpecimenHigh.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(blueSpecimenHigh);
 		}
 
 		const redSampleNet = document.getElementById('redSampleNet');
 		if (redSampleNet) {
 			redSampleNet.style.setProperty('--x', params.get('redSampleNetX'));
 			redSampleNet.style.setProperty('--y', params.get('redSampleNetY'));
-			redSampleNet.setAttribute('draggable', 'true');
-			redSampleNet.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			redSampleNet.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
 
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(redSampleNet);
 		}
 
 		const redSampleLow = document.getElementById('redSampleLow');
@@ -523,38 +337,7 @@
 			redSampleLow.style.setProperty('--x', params.get('redSampleLowX'));
 			redSampleLow.style.setProperty('--y', params.get('redSampleLowY'));
 
-			redSampleLow.setAttribute('draggable', 'true');
-			redSampleLow.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			redSampleLow.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(redSampleLow);
 		}
 
 		const redSampleHigh = document.getElementById('redSampleHigh');
@@ -562,38 +345,7 @@
 			redSampleHigh.style.setProperty('--x', params.get('redSampleHighX'));
 			redSampleHigh.style.setProperty('--y', params.get('redSampleHighY'));
 
-			redSampleHigh.setAttribute('draggable', 'true');
-			redSampleHigh.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			redSampleHigh.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(redSampleHigh);
 		}
 
 		const redSpecimenLow = document.getElementById('redSpecimenLow');
@@ -601,38 +353,7 @@
 			redSpecimenLow.style.setProperty('--x', params.get('redSpecimenLowX'));
 			redSpecimenLow.style.setProperty('--y', params.get('redSpecimenLowY'));
 
-			redSpecimenLow.setAttribute('draggable', 'true');
-			redSpecimenLow.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			redSpecimenLow.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(redSpecimenLow);
 		}
 
 		const redSpecimenHigh = document.getElementById('redSpecimenHigh');
@@ -640,38 +361,7 @@
 			redSpecimenHigh.style.setProperty('--x', params.get('redSpecimenHighX'));
 			redSpecimenHigh.style.setProperty('--y', params.get('redSpecimenHighY'));
 
-			redSpecimenHigh.setAttribute('draggable', 'true');
-			redSpecimenHigh.addEventListener('dragstart', (event) => {
-				globalX = event.x;
-				globalY = event.y;
-			});
-			redSpecimenHigh.addEventListener('dragend', (event) => {
-				let style = (event?.target as HTMLElement).style;
-
-				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
-				let propertyX = style.getPropertyValue('--x');
-				let propertyY = style.getPropertyValue('--y');
-
-				if(propertyX.includes("vw")){
-					propertyX = propertyX.replace("vw", "");
-					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
-				}
-				if(propertyY.includes("vw")){
-					propertyY = propertyY.replace("vw", "");
-					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
-				}
-
-				propertyX=propertyX.replaceAll("px", "");
-				propertyY=propertyY.replaceAll("px", "");
-
-				//get the difference and add that do the original location
-				let x = Number(propertyX) + event.x - globalX;
-				let y = Number(propertyY) + event.y - globalY;
-
-				//set the style properties (x,y)
-				style.setProperty('--x', `${x}px`);
-				style.setProperty('--y', `${y}px`);
-			});
+			setUpBadge(redSpecimenHigh);
 		}
 
 		//if we actually have a socket
@@ -770,65 +460,46 @@
 		}
 	});
 
-	let endGame = () => {
-		if (
-			data &&
-			data['params'] &&
-			data['params']['matchName'] &&
-			!awaitResults.includes(data['params']['matchName'])
-		) {
-			awaitResults = [...awaitResults, data['params']['matchName']];
-		}
+	let setUpBadge = (element: HTMLElement) => {
+		element.setAttribute('draggable', 'true');
+		element.addEventListener('dragstart', (event) => {
+			startX = event.x;
+			startY = event.y;
+		});
+		element.addEventListener('dragend', (event) => {
+			let style = (event?.target as HTMLElement).style;
+			console.clear();
+			//get the style values (x,y)
+			let propertyX = style.getPropertyValue('--x');
+			let propertyY = style.getPropertyValue('--y');
 
-		timer.clear();
-		let oldState = parseState(state);
-		// console.log('endgame');
-		state = State.AWAIT_RESULTS;
-		mode = 'In Review';
-		matchTimeout = undefined;
-		// console.log(
-		// 	'OVERLAY DEBUG',
-		// 	'prior:' + oldState,
-		// 	'post: ' + parseState(state),
-		// 	'type: endGame'
-		// );
+			//remove all type identifiers (if its based on pixels, thn convert it)
+			propertyX = propertyX.replace('vw', '');
+			propertyY = propertyY.replace('vw', '');
+
+			if (propertyX.includes('px')) {
+				propertyX = propertyX.replace('px', '');
+				propertyX = String(vw(propertyX));
+			}
+			if (propertyY.includes('px')) {
+				propertyY = propertyY.replace('px', '');
+				propertyY = String(vw(propertyY));
+			}
+			//get the difference and add that do the original location
+			let x = Number(propertyX) + vw(event.x) - vw(startX);
+			let y = Number(propertyY) + vw(event.y) - vw(startY);
+			//convert back to vw
+
+			//set the style properties (x,y)
+			style.setProperty('--x', String(x) + 'vw');
+			style.setProperty('--y', String(y) + 'vw');
+		});
+	};
+	let vw = (px: number | string) => {
+		return (Number(px) / window.innerWidth) * 100;
 	};
 
-	let showMatch = (field: number) => {
-		let oldState = parseState(state);
-		timer.clear(); //just in case
-		beforeTeleop = true;
-		mode = 'Standby';
-		state = State.AWAIT_MATCH;
-		current = field;
-		// console.log(
-		// 	'OVERLAY DEBUG',
-		// 	'prior:' + oldState,
-		// 	'post: ' + parseState(state),
-		// 	'type: showMethod'
-		// );
-	};
-
-	let startMatch = (field: number) => {
-		let oldState = parseState(state);
-		beforeTeleop = true;
-		current = field;
-
-		timer.reset();
-		timer.start();
-		if (matchTimeout != undefined) {
-			console.log("Match Timeout didn't abort or end");
-			clearTimeout(matchTimeout);
-		}
-		matchTimeout = setTimeout(endGame, 158000);
-		state = State.IN_MATCH;
-		// console.log(
-		// 	'OVERLAY DEBUG',
-		// 	'prior:' + oldState,
-		// 	'post: ' + parseState(state),
-		// 	'type: startMethod'
-		// );
-	};
+	//fieldUpdate and its helper functions
 
 	function fieldUpdate(update: GameUpdate) {
 		try {
@@ -909,6 +580,68 @@
 		} catch {}
 	}
 
+	//fieldUpdate helpers
+	let endGame = () => {
+		if (
+			data &&
+			data['params'] &&
+			data['params']['matchName'] &&
+			!awaitResults.includes(data['params']['matchName'])
+		) {
+			awaitResults = [...awaitResults, data['params']['matchName']];
+		}
+
+		timer.clear();
+		let oldState = parseState(state);
+		// console.log('endgame');
+		state = State.AWAIT_RESULTS;
+		mode = 'In Review';
+		matchTimeout = undefined;
+		// console.log(
+		// 	'OVERLAY DEBUG',
+		// 	'prior:' + oldState,
+		// 	'post: ' + parseState(state),
+		// 	'type: endGame'
+		// );
+	};
+
+	let showMatch = (field: number) => {
+		let oldState = parseState(state);
+		timer.clear(); //just in case
+		beforeTeleop = true;
+		mode = 'Standby';
+		state = State.AWAIT_MATCH;
+		current = field;
+		// console.log(
+		// 	'OVERLAY DEBUG',
+		// 	'prior:' + oldState,
+		// 	'post: ' + parseState(state),
+		// 	'type: showMethod'
+		// );
+	};
+
+	let startMatch = (field: number) => {
+		let oldState = parseState(state);
+		beforeTeleop = true;
+		current = field;
+
+		timer.reset();
+		timer.start();
+		if (matchTimeout != undefined) {
+			console.log("Match Timeout didn't abort or end");
+			clearTimeout(matchTimeout);
+		}
+		matchTimeout = setTimeout(endGame, 158000);
+		state = State.IN_MATCH;
+		// console.log(
+		// 	'OVERLAY DEBUG',
+		// 	'prior:' + oldState,
+		// 	'post: ' + parseState(state),
+		// 	'type: startMethod'
+		// );
+	};
+
+	//i forget
 	function newResults(update: GameUpdate, providedState?: ResultsState) {
 		if (resultsData.some((i) => i.data['params']?.['matchName'] == update['params']?.['matchName']))
 			return;
