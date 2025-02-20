@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <style>
+        pos {
+            position: absolute;
+            left: var(--x, 50%);
+            top: var(--y, 50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dropzone">
+        <pos id="draggable" draggable="true">
+            <div>This div is draggable</div>
+        </pos>
+    </div>
+    <div class="dropzone" id="drop-target"></div>
+    <script>
+        var globalX = 100;
+        var globalY = 100;
+        let draggable = document.getElementById("draggable");
+		draggable.style.setProperty('--x', 0);
+		draggable.style.setProperty('--y', 0);
+        const source = document.getElementById("draggable");
+        source.addEventListener('mouseover', () => {
+				console.log('Cursor is over the element');
+			});
+        source.addEventListener("dragstart", (event) => {
+            // console.log(event.target);
+            globalX = event.x;
+            globalY = event.y;
+            console.log("a")
+            // console.log(event.screenX+", "+event.screenY);
+        });
+        source.addEventListener("dragend", (event) => {
+            // reset the transparency
+            let x = Number(event.target.style.getPropertyValue('--x'))+(event.x)-(globalX);
+            let y = Number(event.target.style.getPropertyValue('--y'))+(event.y)-(globalY);
+
+            
+			console.log('dif: ', globalX - event.x, globalY - event.y);
+			console.log('og properties: ', style.getPropertyValue('--x'), style.getPropertyValue('--y'));
+
+			console.log('global: ', globalX, globalY);
+
+			style.setProperty('--x', `${x}`);
+			style.setProperty('--y', `${y}`);
+
+			console.log('finasl: ', x, y);
+			event.target.style.setProperty('--x', x);
+			event.target.style.setProperty('--y', y);
+
+        });
+    </script>
+</body>
+
+</html>

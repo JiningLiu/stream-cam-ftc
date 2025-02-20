@@ -33,8 +33,6 @@
 			id="overlay-custom"
 		></iframe>
 	{/if}
-	<iframe src="/overlay/official" frameborder="0" title="Official Overlay" id="overlay-official"
-	></iframe>
 </main>
 
 <style>

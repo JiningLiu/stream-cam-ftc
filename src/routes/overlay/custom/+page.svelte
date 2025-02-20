@@ -11,7 +11,6 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import { onMount } from 'svelte';
-	import { parse } from 'svelte/compiler';
 
 	const processingTypes = [
 		'START_MATCH',
@@ -270,6 +269,10 @@
 
 	let socket: WebSocket;
 	onMount(() => {
+		console.log("hi")
+		let globalX = 0; //temp x for drag
+		let globalY = 0; //temp y for drag
+
 		const paramsString = `?${new URLSearchParams(location.search).get('parameters')}`;
 		const params = new URLSearchParams(paramsString);
 
@@ -283,60 +286,392 @@
 		if (blueSampleNet) {
 			blueSampleNet.style.setProperty('--x', params.get('blueSampleNetX'));
 			blueSampleNet.style.setProperty('--y', params.get('blueSampleNetY'));
+
+			blueSampleNet.setAttribute('draggable', 'true');
+
+			blueSampleNet.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			blueSampleNet.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const blueSampleLow = document.getElementById('blueSampleLow');
+
 		if (blueSampleLow) {
 			blueSampleLow.style.setProperty('--x', params.get('blueSampleLowX'));
 			blueSampleLow.style.setProperty('--y', params.get('blueSampleLowY'));
+
+
+			blueSampleLow.setAttribute('draggable', 'true');
+			blueSampleLow.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			blueSampleLow.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const blueSampleHigh = document.getElementById('blueSampleHigh');
 		if (blueSampleHigh) {
 			blueSampleHigh.style.setProperty('--x', params.get('blueSampleHighX'));
 			blueSampleHigh.style.setProperty('--y', params.get('blueSampleHighY'));
+
+			blueSampleHigh.setAttribute('draggable', 'true');
+			blueSampleHigh.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			blueSampleHigh.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const blueSpecimenLow = document.getElementById('blueSpecimenLow');
 		if (blueSpecimenLow) {
 			blueSpecimenLow.style.setProperty('--x', params.get('blueSpecimenLowX'));
 			blueSpecimenLow.style.setProperty('--y', params.get('blueSpecimenLowY'));
+
+			blueSpecimenLow.setAttribute('draggable', 'true');
+			blueSpecimenLow.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			blueSpecimenLow.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const blueSpecimenHigh = document.getElementById('blueSpecimenHigh');
 		if (blueSpecimenHigh) {
 			blueSpecimenHigh.style.setProperty('--x', params.get('blueSpecimenHighX'));
 			blueSpecimenHigh.style.setProperty('--y', params.get('blueSpecimenHighY'));
+
+			blueSpecimenHigh.setAttribute('draggable', 'true');
+			blueSpecimenHigh.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			blueSpecimenHigh.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const redSampleNet = document.getElementById('redSampleNet');
 		if (redSampleNet) {
 			redSampleNet.style.setProperty('--x', params.get('redSampleNetX'));
 			redSampleNet.style.setProperty('--y', params.get('redSampleNetY'));
+			redSampleNet.setAttribute('draggable', 'true');
+			redSampleNet.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			redSampleNet.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const redSampleLow = document.getElementById('redSampleLow');
 		if (redSampleLow) {
 			redSampleLow.style.setProperty('--x', params.get('redSampleLowX'));
 			redSampleLow.style.setProperty('--y', params.get('redSampleLowY'));
+
+			redSampleLow.setAttribute('draggable', 'true');
+			redSampleLow.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			redSampleLow.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const redSampleHigh = document.getElementById('redSampleHigh');
 		if (redSampleHigh) {
 			redSampleHigh.style.setProperty('--x', params.get('redSampleHighX'));
 			redSampleHigh.style.setProperty('--y', params.get('redSampleHighY'));
+
+			redSampleHigh.setAttribute('draggable', 'true');
+			redSampleHigh.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			redSampleHigh.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const redSpecimenLow = document.getElementById('redSpecimenLow');
 		if (redSpecimenLow) {
 			redSpecimenLow.style.setProperty('--x', params.get('redSpecimenLowX'));
 			redSpecimenLow.style.setProperty('--y', params.get('redSpecimenLowY'));
+
+			redSpecimenLow.setAttribute('draggable', 'true');
+			redSpecimenLow.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			redSpecimenLow.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		const redSpecimenHigh = document.getElementById('redSpecimenHigh');
 		if (redSpecimenHigh) {
 			redSpecimenHigh.style.setProperty('--x', params.get('redSpecimenHighX'));
 			redSpecimenHigh.style.setProperty('--y', params.get('redSpecimenHighY'));
+
+			redSpecimenHigh.setAttribute('draggable', 'true');
+			redSpecimenHigh.addEventListener('dragstart', (event) => {
+				globalX = event.x;
+				globalY = event.y;
+			});
+			redSpecimenHigh.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+
+				//get the style values (x,y) and convert from vw to px (while removing all non-numbers)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				if(propertyX.includes("vw")){
+					propertyX = propertyX.replace("vw", "");
+					propertyX = `${(Number(propertyX) / 100) * window.innerWidth}`;
+				}
+				if(propertyY.includes("vw")){
+					propertyY = propertyY.replace("vw", "");
+					propertyY = `${(Number(propertyY) / 100) * window.innerHeight}`;
+				}
+
+				propertyX=propertyX.replaceAll("px", "");
+				propertyY=propertyY.replaceAll("px", "");
+
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + event.x - globalX;
+				let y = Number(propertyY) + event.y - globalY;
+
+				//set the style properties (x,y)
+				style.setProperty('--x', `${x}px`);
+				style.setProperty('--y', `${y}px`);
+			});
 		}
 
 		//if we actually have a socket

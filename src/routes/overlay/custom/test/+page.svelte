@@ -1,76 +1,82 @@
 <script lang="ts">
-	import Results from '../results/Results.svelte';
-	import { ResultsState } from '$lib/types';
+	import { onMount } from 'svelte';
 
-	let resultsStatus = ResultsState.AWAITING;
+	let initX = 0;
+	let initY = 0;
+	let x = 0;
+	let y = 0;
+	let dragging = false;
+
+	function update() {
+		let source = document.getElementById('draggable');
+
+		if (!source) return;
+		console.log("asfhk", { x: x, y: y });
+
+		source.style.setProperty('--x', `${x}`);
+		source.style.setProperty('--y', `${y}`);
+		if (dragging) update();
+	}
+
+	onMount(() => {
+		let source = document.getElementById('draggable');
+		document.body.addEventListener('mousemove', (event) => {
+			console.log({ x: event.x, y: event.y });
+			x = event.x;
+			y = event.y;
+		});
+
+		if (!source) return;
+		source.style.setProperty('--x', '0');
+		source.style.setProperty('--y', '0');
+
+		source.addEventListener('mousedown', (event) => {
+			// console.log(event.target);
+			dragging = true;
+			initX = event.x;
+			initY = event.y;
+			update();
+			// console.log('dragstart: ', globalX, globalY);
+			// console.log(event.screenX+", "+event.screenY);
+		});
+
+		source.addEventListener('dragend', (event) => {
+			// reset the transparency
+			let style = (event?.target as HTMLElement).style;
+			if (!style) return;
+			x = +style.getPropertyValue('--x') + event.x - initX;
+			y = +style.getPropertyValue('--y') + event.y - initY;
+
+			// console.log('dif: ', globalX - event.x, globalY - event.y);
+			// console.log('og properties: ', style.getPropertyValue('--x'), style.getPropertyValue('--y'));
+
+			// console.log('global: ', globalX, globalY);
+
+			// style.setProperty('--x', `${x}`);
+			// style.setProperty('--y', `${y}`);
+
+			// console.log('finasl: ', x, y);
+		});
+	});
 </script>
 
 <head>
 	<link rel="stylesheet" href="/overlays.css" />
 </head>
 
-<Results
-	state={resultsStatus}
-	name="Qualification 3 of 12"
-	blueScore="233"
-	redScore="233"
-	blueTeams={[
-		{ number: '20240', ranking: 1, rankMove: 'UP' },
-		{ number: '17113', ranking: 3 }
-	]}
-	redTeams={[
-		{ number: '17315', ranking: 2 },
-		{ number: '18886', ranking: 4, rankMove: 'DOWN' }
-	]}
-	blueAuto="111"
-	blueAutoSampleNet="25"
-	blueAutoSampleLow="20"
-	blueAutoSampleHigh="30"
-	blueAutoSpecimenLow="16"
-	blueAutoSpecimenHigh="20"
-	blue1AutoLocation="ASCENT_2"
-	blue2AutoLocation="OBSERVATION_ZONE"
-	blueTeleop="111"
-	blueTeleopSampleNet="25"
-	blueTeleopSampleLow="20"
-	blueTeleopSampleHigh="30"
-	blueTeleopSpecimenLow="16"
-	blueTeleopSpecimenHigh="20"
-	blue1TeleopLocation="ASCENT_3"
-	blue2TeleopLocation="ASCENT_2"
-	blueFoulsReceived="11"
-	redAuto="111"
-	redAutoSampleNet="25"
-	redAutoSampleLow="20"
-	redAutoSampleHigh="30"
-	redAutoSpecimenLow="16"
-	redAutoSpecimenHigh="20"
-	red1AutoLocation="ASCENT_1"
-	red2AutoLocation="OBSERVATION_ZONE"
-	redTeleop="111"
-	redTeleopSampleNet="25"
-	redTeleopSampleLow="20"
-	redTeleopSampleHigh="30"
-	redTeleopSpecimenLow="16"
-	redTeleopSpecimenHigh="20"
-	red1TeleopLocation="ASCENT_3"
-	red2TeleopLocation="ASCENT_1"
-	redFoulsReceived="11"
-/>
+<pos id="draggable">
+	<div>This div is draggable</div>
+</pos>
 
-<button
-	on:click={() => {
-		resultsStatus = (() => {
-			switch (resultsStatus) {
-				case ResultsState.HIDDEN:
-					return ResultsState.AWAITING;
-				case ResultsState.AWAITING:
-					return ResultsState.MINI;
-				case ResultsState.MINI:
-					return ResultsState.FULL;
-				case ResultsState.FULL:
-					return ResultsState.HIDDEN;
-			}
-		})();
-	}}>toggle</button
->
+<style>
+	:global(body) {
+		margin: 0;
+		padding: 0;
+		width: 100vw;
+		height: 100vh;
+	}
+
+	* {
+		user-select: none;
+	}
+</style>

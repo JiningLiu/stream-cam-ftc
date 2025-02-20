@@ -1,21 +1,22 @@
 <svelte:options customElement="results-component" />
 
 <script lang="ts">
-	// import QRCode from 'qrcode';
-	// import { onMount } from 'svelte';
+	import QRCode from 'qrcode';
+	import { onMount } from 'svelte';
 
-	// onMount(() => {
-	// 	let canvas = document.getElementById('qr');
+	onMount(() => {
+		
+		let canvas = document.getElementById('qr');
 
-	// 	QRCode.toCanvas(canvas, 'https://ftc.events/2024/USTXAUQ', {
-	// 		margin: 0,
-	// 		scale: 4,
-	// 		color: { dark: '#ffffffff', light: '#11111100' }
-	// 	});
-	// });
+		QRCode.toCanvas(canvas, 'https://ftc.events/2024/USTXAUQ', {
+			margin: 0,
+			scale: 4,
+			color: { dark: '#0000FFFF', light: '#11111100' }
+		});
+	});
 
 	import { ResultsState, resultsStatusIsAwait, resultsStatusIsNotFull } from '$lib/types';
-
+	//
 	let {
 		state = ResultsState.AWAITING,
 		name = 'Previous Match',
@@ -277,12 +278,16 @@
 			<h3 class="red-fouls w-100">{+redFoulsReceived > 0 ? '+' : ''}{redFoulsReceived}</h3>
 		</div>
 
-		<!-- <canvas id="qr"></canvas> -->
+		<canvas id="qr" style=""></canvas>
 	</div>
 </container>
 <slot />
 
 <style>
+	#qr{
+		z-index: 1000;
+		margin:10px;
+	}
 	container {
 		display: flex;
 		align-items: center;
