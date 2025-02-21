@@ -566,10 +566,6 @@
 						break;
 				}
 
-				if (type == 'SHOW_RESULTS') {
-					newResults(update);
-				}
-
 				// console.log(
 				// 	'STREAM DEBUG',
 				// 	'prior:' + oldState,

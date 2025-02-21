@@ -5,7 +5,6 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
-		
 		let canvas = document.getElementById('qr');
 
 		QRCode.toCanvas(canvas, 'https://ftc.events/2024/USTXAUQ', {
@@ -130,8 +129,15 @@
 		<separator class:hidden={resultsStatusIsAwait(state)}></separator>
 
 		<div id="scores" class="hstack" class:hidden={resultsStatusIsAwait(state)}>
-			<h1 class="blue scpre">{blueScore}</h1>
-			<h1 class="red score">{redScore}</h1>
+			<h1 class="blue score">
+				<div class:hidden={redScore < blueScore} class="crown">􀦆</div>
+				<span style="z-index:1">{blueScore}</span>
+			</h1>
+
+			<h1 class="red score">
+				<div class:hidden={redScore > blueScore} class="crown">􀦆</div>
+				<span style="z-index:1">{redScore}</span>
+			</h1>
 		</div>
 
 		<div class="section" class:hidden={resultsStatusIsAwait(state)}>
@@ -284,9 +290,21 @@
 <slot />
 
 <style>
-	#qr{
+	.crown {
+		margin-top: 2px;
+		font-size: 3.6vw;
+		color: rgb(220, 220, 0);
+		opacity: 0.75;
+		position: absolute;
+		z-index: 0;
+	}
+	.right {
+		float: right;
+	}
+
+	#qr {
 		z-index: 1000;
-		margin:10px;
+		margin: 10px;
 	}
 	container {
 		display: flex;

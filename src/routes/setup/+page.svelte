@@ -459,7 +459,7 @@
 					<p>Import From Url</p>
 					<input type="text" bind:value={importUrl} />
 				</div>
-				<button on:click={importFromUrl}>Import from  URL</button>
+				<button on:click={importFromUrl}>Import from URL</button>
 			</div>
 		</div>
 	</div>

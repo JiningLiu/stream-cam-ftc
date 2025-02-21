@@ -52,12 +52,7 @@ mini-results {
 	flex-direction: row;
 }
 
-.zstack {
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+
 
 .vcenter {
 	align-items: center;
