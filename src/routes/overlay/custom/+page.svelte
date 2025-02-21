@@ -573,9 +573,6 @@
 				// 	'type: ' + type
 				// );
 			}
-			if(type == 'SHOW_RESULTS') {
-			newResults(update);
-		}
 		} catch {}
 		
 	}
@@ -696,7 +693,7 @@
 
 					advanceResults();
 				}, 500);
-			}, 100000000000);//TODO: revert
+			}, 30000);
 		}, 500);
 	}
 
