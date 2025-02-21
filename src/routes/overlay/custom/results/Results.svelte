@@ -130,12 +130,12 @@
 
 		<div id="scores" class="hstack" class:hidden={resultsStatusIsAwait(state)}>
 			<h1 class="blue score">
-				<div class:hidden={redScore < blueScore} class="crown">􀦆</div>
+				<div class:hidden={+redScore >= +blueScore} class="crown">􀦆</div>
 				<span style="z-index:1">{blueScore}</span>
 			</h1>
 
 			<h1 class="red score">
-				<div class:hidden={redScore > blueScore} class="crown">􀦆</div>
+				<div class:hidden={+redScore <= +blueScore} class="crown">􀦆</div>
 				<span style="z-index:1">{redScore}</span>
 			</h1>
 		</div>
