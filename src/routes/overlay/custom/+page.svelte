@@ -573,7 +573,11 @@
 				// 	'type: ' + type
 				// );
 			}
+			if(type == 'SHOW_RESULTS') {
+			newResults(update);
+		}
 		} catch {}
+		
 	}
 
 	//fieldUpdate helpers
@@ -692,7 +696,7 @@
 
 					advanceResults();
 				}, 500);
-			}, 30000);
+			}, 100000000000);//TODO: revert
 		}, 500);
 	}
 
@@ -732,6 +736,7 @@
 	<link rel="stylesheet" href="/overlays.css" />
 </head>
 <main>
+
 	<overlay class:hidden={currentResults?.state == ResultsState.FULL || !data}>
 		<pos id="blueSampleNet">
 			<ScoreBadge
@@ -904,7 +909,9 @@
 			</div>
 
 			{#if currentResults}
+
 				<div id="results" class:away={currentResults.state == ResultsState.HIDDEN}>
+
 					<Results
 						state={currentResults.state}
 						name={currentResults.data.params?.matchName}

@@ -291,7 +291,7 @@
 
 <style>
 	.crown {
-		margin-top: 2px;
+		margin-top: 0.2vw;
 		font-size: 3.6vw;
 		color: rgb(220, 220, 0);
 		opacity: 0.75;
