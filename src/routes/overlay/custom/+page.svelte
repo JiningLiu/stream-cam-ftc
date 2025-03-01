@@ -11,6 +11,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 
 	const processingTypes = [
 		'START_MATCH',
@@ -233,7 +234,7 @@
 			else {
 				this.startTime = beginTime;
 
-				console.log('def: auto');
+				// console.log('def: auto');
 				this.currentStateIndex = 0;
 				mode = 'Auto';
 				beforeTeleop = true;
@@ -272,11 +273,25 @@
 	let startX = 0; //temp x for drag
 	let startY = 0; //temp y for drag
 
+	let lastX = 0;
+	let lastY = 0;
+	let isSafari = false;
 	onMount(() => {
-		console.log('hi');
-
 		const paramsString = `?${new URLSearchParams(location.search).get('parameters')}`;
 		const params = new URLSearchParams(paramsString);
+
+		if (params.get('safari') == null) {
+			params.append(
+				'safari',
+				String(
+					confirm(
+						'would you like to go to the alternate version of the overlay? The main drag and drop system is not supported in some browsers, but the alternate version is more computer intensive'
+					)
+				)
+			);
+		}
+
+		isSafari = params.get('safari') == 'true';
 
 		//if there are elements for each tag, then it will set the locations for that element
 		const suppliedInfoBannerText = params.get('infoBannerText');
@@ -286,10 +301,7 @@
 
 		const blueSampleNet = document.getElementById('blueSampleNet');
 		if (blueSampleNet) {
-			blueSampleNet.style.setProperty('--x', params.get('blueSampleNetX'));
-			blueSampleNet.style.setProperty('--y', params.get('blueSampleNetY'));
-
-			setUpBadge(blueSampleNet);
+			setUpBadge(blueSampleNet, params.get('blueSampleNetX'), params.get('blueSampleNetY'));
 		}
 
 		const blueSampleLow = document.getElementById('blueSampleLow');
@@ -297,7 +309,7 @@
 			blueSampleLow.style.setProperty('--x', params.get('blueSampleLowX'));
 			blueSampleLow.style.setProperty('--y', params.get('blueSampleLowY'));
 
-			setUpBadge(blueSampleLow);
+			setUpBadge(blueSampleLow, params.get('blueSampleLowX'), params.get('blueSampleLowY'));
 		}
 
 		const blueSampleHigh = document.getElementById('blueSampleHigh');
@@ -305,7 +317,7 @@
 			blueSampleHigh.style.setProperty('--x', params.get('blueSampleHighX'));
 			blueSampleHigh.style.setProperty('--y', params.get('blueSampleHighY'));
 
-			setUpBadge(blueSampleHigh);
+			setUpBadge(blueSampleHigh, params.get('blueSampleHighX'), params.get('blueSampleHighY'));
 		}
 
 		const blueSpecimenLow = document.getElementById('blueSpecimenLow');
@@ -313,7 +325,7 @@
 			blueSpecimenLow.style.setProperty('--x', params.get('blueSpecimenLowX'));
 			blueSpecimenLow.style.setProperty('--y', params.get('blueSpecimenLowY'));
 
-			setUpBadge(blueSpecimenLow);
+			setUpBadge(blueSpecimenLow, params.get('blueSpecimenLowX'), params.get('blueSpecimenLowY'));
 		}
 
 		const blueSpecimenHigh = document.getElementById('blueSpecimenHigh');
@@ -321,7 +333,11 @@
 			blueSpecimenHigh.style.setProperty('--x', params.get('blueSpecimenHighX'));
 			blueSpecimenHigh.style.setProperty('--y', params.get('blueSpecimenHighY'));
 
-			setUpBadge(blueSpecimenHigh);
+			setUpBadge(
+				blueSpecimenHigh,
+				params.get('blueSpecimenHighX'),
+				params.get('blueSpecimenHighY')
+			);
 		}
 
 		const redSampleNet = document.getElementById('redSampleNet');
@@ -329,7 +345,7 @@
 			redSampleNet.style.setProperty('--x', params.get('redSampleNetX'));
 			redSampleNet.style.setProperty('--y', params.get('redSampleNetY'));
 
-			setUpBadge(redSampleNet);
+			setUpBadge(redSampleNet, params.get('redSampleNetX'), params.get('redSampleNetY'));
 		}
 
 		const redSampleLow = document.getElementById('redSampleLow');
@@ -337,7 +353,7 @@
 			redSampleLow.style.setProperty('--x', params.get('redSampleLowX'));
 			redSampleLow.style.setProperty('--y', params.get('redSampleLowY'));
 
-			setUpBadge(redSampleLow);
+			setUpBadge(redSampleLow, params.get('redSampleLowX'), params.get('redSampleLowY'));
 		}
 
 		const redSampleHigh = document.getElementById('redSampleHigh');
@@ -345,7 +361,7 @@
 			redSampleHigh.style.setProperty('--x', params.get('redSampleHighX'));
 			redSampleHigh.style.setProperty('--y', params.get('redSampleHighY'));
 
-			setUpBadge(redSampleHigh);
+			setUpBadge(redSampleHigh, params.get('redSampleHighX'), params.get('redSampleHighY'));
 		}
 
 		const redSpecimenLow = document.getElementById('redSpecimenLow');
@@ -353,7 +369,7 @@
 			redSpecimenLow.style.setProperty('--x', params.get('redSpecimenLowX'));
 			redSpecimenLow.style.setProperty('--y', params.get('redSpecimenLowY'));
 
-			setUpBadge(redSpecimenLow);
+			setUpBadge(redSpecimenLow, params.get('redSpecimenLowX'), params.get('redSpecimenLowY'));
 		}
 
 		const redSpecimenHigh = document.getElementById('redSpecimenHigh');
@@ -361,7 +377,7 @@
 			redSpecimenHigh.style.setProperty('--x', params.get('redSpecimenHighX'));
 			redSpecimenHigh.style.setProperty('--y', params.get('redSpecimenHighY'));
 
-			setUpBadge(redSpecimenHigh);
+			setUpBadge(redSpecimenHigh, params.get('redSpecimenHighX'), params.get('redSpecimenHighY'));
 		}
 
 		//if we actually have a socket
@@ -460,41 +476,91 @@
 		}
 	});
 
-	let setUpBadge = (element: HTMLElement) => {
+	let setUpBadge = (element: HTMLElement, x: string | null, y: string | null) => {
+		//if it is a number and it is in vw, then allow it to work, otherwise set it to 0
+
+		if (x != null && isNaN(Number(x.replace('vw', ''))) && x.includes('vw')) {
+			element.style.setProperty('--x', x);
+		} else {
+			element.style.setProperty('--x', 0 + 'vw');
+		}
+		if (y != null && isNaN(Number(y.replace('vw', ''))) && y.includes('vw')) {
+			element.style.setProperty('--y', y);
+		} else {
+			element.style.setProperty('--y', 0 + 'vw');
+		}
+		//set up drag i guess
 		element.setAttribute('draggable', 'true');
 		element.addEventListener('dragstart', (event) => {
 			startX = event.x;
 			startY = event.y;
 		});
-		element.addEventListener('dragend', (event) => {
-			let style = (event?.target as HTMLElement).style;
-			console.clear();
-			//get the style values (x,y)
-			let propertyX = style.getPropertyValue('--x');
-			let propertyY = style.getPropertyValue('--y');
+		//if we are in safari mode, it still works if we set the last location based on drag, instead of dragend
+		//however, this does update it every single frame, so it is less optimal
+		if (isSafari) {
+			element.addEventListener('drag', (event) => {
+				lastX = event.x;
+				lastY = event.y;
+			});
+			element.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+				//get the style values (x,y)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
 
-			//remove all type identifiers (if its based on pixels, thn convert it)
-			propertyX = propertyX.replace('vw', '');
-			propertyY = propertyY.replace('vw', '');
+				//remove all type identifiers (if its based on pixels, thn convert it)
+				propertyX = propertyX.replace('vw', '');
+				propertyY = propertyY.replace('vw', '');
 
-			if (propertyX.includes('px')) {
-				propertyX = propertyX.replace('px', '');
-				propertyX = String(vw(propertyX));
-			}
-			if (propertyY.includes('px')) {
-				propertyY = propertyY.replace('px', '');
-				propertyY = String(vw(propertyY));
-			}
-			//get the difference and add that do the original location
-			let x = Number(propertyX) + vw(event.x) - vw(startX);
-			let y = Number(propertyY) + vw(event.y) - vw(startY);
-			//convert back to vw
+				if (propertyX.includes('px')) {
+					propertyX = propertyX.replace('px', '');
+					propertyX = String(vw(propertyX));
+				}
+				if (propertyY.includes('px')) {
+					propertyY = propertyY.replace('px', '');
+					propertyY = String(vw(propertyY));
+				}
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + vw(lastX) - vw(startX);
+				let y = Number(propertyY) + vw(lastY) - vw(startY);
 
-			//set the style properties (x,y)
-			style.setProperty('--x', String(x) + 'vw');
-			style.setProperty('--y', String(y) + 'vw');
-		});
+				//set the style properties (x,y)
+				style.setProperty('--x', String(x) + 'vw');
+				style.setProperty('--y', String(y) + 'vw');
+			});
+		} 
+		//if we aren't in safari mode, we can do the more optimal system that only works on some browsers
+		// This version doesn't have a call for each frame of drag and instead uses dragend
+		else {
+			element.addEventListener('dragend', (event) => {
+				let style = (event?.target as HTMLElement).style;
+				//get the style values (x,y)
+				let propertyX = style.getPropertyValue('--x');
+				let propertyY = style.getPropertyValue('--y');
+
+				//remove all type identifiers (if its based on pixels, thn convert it)
+				propertyX = propertyX.replace('vw', '');
+				propertyY = propertyY.replace('vw', '');
+
+				if (propertyX.includes('px')) {
+					propertyX = propertyX.replace('px', '');
+					propertyX = String(vw(propertyX));
+				}
+				if (propertyY.includes('px')) {
+					propertyY = propertyY.replace('px', '');
+					propertyY = String(vw(propertyY));
+				}
+				//get the difference and add that do the original location
+				let x = Number(propertyX) + vw(event.x) - vw(startX);
+				let y = Number(propertyY) + vw(event.y) - vw(startY);
+
+				//set the style properties (x,y)
+				style.setProperty('--x', String(x) + 'vw');
+				style.setProperty('--y', String(y) + 'vw');
+			});
+		}
 	};
+
 	let vw = (px: number | string) => {
 		return (Number(px) / window.innerWidth) * 100;
 	};
@@ -574,7 +640,6 @@
 				// );
 			}
 		} catch {}
-		
 	}
 
 	//fieldUpdate helpers
@@ -733,7 +798,6 @@
 	<link rel="stylesheet" href="/overlays.css" />
 </head>
 <main>
-
 	<overlay class:hidden={currentResults?.state == ResultsState.FULL || !data}>
 		<pos id="blueSampleNet">
 			<ScoreBadge
@@ -906,9 +970,7 @@
 			</div>
 
 			{#if currentResults}
-
 				<div id="results" class:away={currentResults.state == ResultsState.HIDDEN}>
-
 					<Results
 						state={currentResults.state}
 						name={currentResults.data.params?.matchName}
