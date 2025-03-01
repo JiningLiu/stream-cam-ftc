@@ -292,7 +292,7 @@
 		}
 
 		isSafari = params.get('safari') == 'true';
-
+		
 		//if there are elements for each tag, then it will set the locations for that element
 		const suppliedInfoBannerText = params.get('infoBannerText');
 		if (suppliedInfoBannerText) {

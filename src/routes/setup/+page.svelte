@@ -17,7 +17,7 @@
 
 	let overlaySocketHost = 'localhost';
 	let overlayEventCode = 'ustxtbsq';
-
+	let isSafari = false;
 	let overlayInfoBannerText = 'FiT-Central Regional Championship';
 	let overlayBlueSampleNetX = '';
 	let overlayBlueSampleNetY = '';
@@ -65,6 +65,9 @@
 					updateOverlay();
 				}
 			});
+		});
+		document.getElementById("safariBox")?.addEventListener('change', (event) => {
+			updateOverlay();
 		});
 	});
 
@@ -141,7 +144,8 @@
 				overlayRedSpecimenLowY
 			)}&redSpecimenHighX=${encodeURIComponent(
 				overlayRedSpecimenHighX
-			)}&redSpecimenHighY=${encodeURIComponent(overlayRedSpecimenHighY)}`
+			)}&redSpecimenHighY=${encodeURIComponent(overlayRedSpecimenHighY)}
+			&safari=${encodeURIComponent(isSafari.toString())}`
 		)}`;
 
 		try {
@@ -342,6 +346,10 @@
 						bind:value={overlayInfoBannerText}
 						placeholder="FiT-Central Regional Championship"
 					/>
+				</div>
+				<div class="vstack">
+					<p>safari mode</p>
+					<input class="overlay" type="checkbox" bind:checked={isSafari} id="safariBox" />
 				</div>
 			</div>
 		</div>
