@@ -8,10 +8,9 @@
 
 	import { ResultsState } from '$lib/types';
 
-	import { v4 as uuidv4 } from 'uuid';
-
 	import { onMount } from 'svelte';
-	import { page } from '$app/state';
+
+	import { v4 as uuidv4 } from 'uuid';
 
 	const processingTypes = [
 		'START_MATCH',
@@ -292,8 +291,8 @@
 		}
 
 		isSafari = params.get('safari') == 'true';
-		
-		//if there are elements for each tag, then it will set the locations for that element
+
+		// if there are elements for each tag, then it will set the locations for that element
 		const suppliedInfoBannerText = params.get('infoBannerText');
 		if (suppliedInfoBannerText) {
 			infoBannerText = suppliedInfoBannerText + ' • ';
@@ -470,14 +469,14 @@
 				console.log('FTCLive display WebSocket closed.');
 			};
 		}
-		//otherwise redirect to the builder
+		// otherwise redirect to the builder
 		else {
 			location.href = './generate';
 		}
 	});
 
 	let setUpBadge = (element: HTMLElement, x: string | null, y: string | null) => {
-		//if it is a number and it is in vw, then allow it to work, otherwise set it to 0
+		// if it is a number and it is in vw, then allow it to work, otherwise set it to 0
 
 		if (x != null && isNaN(Number(x.replace('vw', ''))) && x.includes('vw')) {
 			element.style.setProperty('--x', x);
@@ -489,26 +488,29 @@
 		} else {
 			element.style.setProperty('--y', 0 + 'vw');
 		}
-		//set up drag i guess
+
+		// set up drag i guess
 		element.setAttribute('draggable', 'true');
 		element.addEventListener('dragstart', (event) => {
 			startX = event.x;
 			startY = event.y;
 		});
-		//if we are in safari mode, it still works if we set the last location based on drag, instead of dragend
-		//however, this does update it every single frame, so it is less optimal
+
+		// if we are in safari mode, it still works if we set the last location based on drag, instead of dragend
+		// however, this does update it every single frame, so it is less optimal
 		if (isSafari) {
 			element.addEventListener('drag', (event) => {
 				lastX = event.x;
 				lastY = event.y;
 			});
+
 			element.addEventListener('dragend', (event) => {
 				let style = (event?.target as HTMLElement).style;
-				//get the style values (x,y)
+				// get the style values (x,y)
 				let propertyX = style.getPropertyValue('--x');
 				let propertyY = style.getPropertyValue('--y');
 
-				//remove all type identifiers (if its based on pixels, thn convert it)
+				// remove all type identifiers (if its based on pixels, thn convert it)
 				propertyX = propertyX.replace('vw', '');
 				propertyY = propertyY.replace('vw', '');
 
@@ -520,25 +522,27 @@
 					propertyY = propertyY.replace('px', '');
 					propertyY = String(vw(propertyY));
 				}
-				//get the difference and add that do the original location
+				// get the difference and add that do the original location
 				let x = Number(propertyX) + vw(lastX) - vw(startX);
 				let y = Number(propertyY) + vw(lastY) - vw(startY);
 
-				//set the style properties (x,y)
+				// set the style properties (x,y)
 				style.setProperty('--x', String(x) + 'vw');
 				style.setProperty('--y', String(y) + 'vw');
 			});
-		} 
-		//if we aren't in safari mode, we can do the more optimal system that only works on some browsers
+		}
+
+		// if we aren't in safari mode, we can do the more optimal system that only works on some browsers
 		// This version doesn't have a call for each frame of drag and instead uses dragend
 		else {
 			element.addEventListener('dragend', (event) => {
 				let style = (event?.target as HTMLElement).style;
-				//get the style values (x,y)
+
+				// get the style values (x,y)
 				let propertyX = style.getPropertyValue('--x');
 				let propertyY = style.getPropertyValue('--y');
 
-				//remove all type identifiers (if its based on pixels, thn convert it)
+				// remove all type identifiers (if its based on pixels, thn convert it)
 				propertyX = propertyX.replace('vw', '');
 				propertyY = propertyY.replace('vw', '');
 
@@ -550,11 +554,12 @@
 					propertyY = propertyY.replace('px', '');
 					propertyY = String(vw(propertyY));
 				}
-				//get the difference and add that do the original location
+
+				// get the difference and add that do the original location
 				let x = Number(propertyX) + vw(event.x) - vw(startX);
 				let y = Number(propertyY) + vw(event.y) - vw(startY);
 
-				//set the style properties (x,y)
+				// set the style properties (x,y)
 				style.setProperty('--x', String(x) + 'vw');
 				style.setProperty('--y', String(y) + 'vw');
 			});
@@ -565,7 +570,7 @@
 		return (Number(px) / window.innerWidth) * 100;
 	};
 
-	//fieldUpdate and its helper functions
+	// fieldUpdate and its helper functions
 
 	function fieldUpdate(update: GameUpdate) {
 		try {
