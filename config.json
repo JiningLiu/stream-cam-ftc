@@ -1,3 +1,23 @@
 {
-	"port": 6401
+	"name": "FTC Live Streaming",
+	"description": "Automatic camera switcher & overlays for FIRST® Tech Challenge live streams",
+	"developer": "FTC Team 20240 Slingshot",
+	"user": "JiningLiu",
+	"repo": "stream-cam-ftc",
+
+	"port": 6401,
+	"flags": {
+		"--no-cam-switcher": {
+			"name": "Disable Automatic Camera Switcher",
+			"enabled": false
+		},
+		"--disable-info-overlay": {
+			"name": "Disable Informational Overlays",
+			"enabled": false
+		},
+		"--disable-scores-overlay": {
+			"name": "Disable Live Scoring Overlays",
+			"enabled": false
+		}
+	}
 }
