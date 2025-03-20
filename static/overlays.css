@@ -15,10 +15,7 @@ body {
 }
 
 main,
-overlay,
-results,
-await-mini-results,
-mini-results {
+overlay {
 	position: absolute;
 	top: calc((100vh - (100vw / 16 * 9)) / 4);
 	width: 100vw;

@@ -802,7 +802,72 @@
 <head>
 	<link rel="stylesheet" href="/overlays.css" />
 </head>
+
 <main>
+	<results>
+		<div class="vstack container">
+			<div
+				id="await"
+				class:away={!(awaitResults.length > 0 && currentResults?.state != ResultsState.FULL)}
+			>
+				<Results state={ResultsState.AWAITING} name={displayAwaitResults.join('<br>')} />
+			</div>
+
+			{#if currentResults}
+				<div id="results" class:away={currentResults.state == ResultsState.HIDDEN}>
+					<Results
+						state={currentResults.state}
+						name={currentResults.data.params?.matchName}
+						blueScore={(
+							(currentResults.data.params?.blueScores?.preFoulTotal || 0) +
+							(currentResults.data.params?.redScores?.foulPointsCommitted || 0)
+						).toString()}
+						redScore={(
+							(currentResults.data.params?.redScores?.preFoulTotal || 0) +
+							(currentResults.data.params?.blueScores?.foulPointsCommitted || 0)
+						).toString()}
+						blueTeams={currentResults.data.params?.blue?.teams}
+						redTeams={currentResults.data.params?.red?.teams}
+						blueAuto={currentResults.data.params?.blueScores?.autoPoints?.toString()}
+						blueAutoSampleNet={currentResults.data.params?.blueScores?.autoSampleNet?.toString()}
+						blueAutoSampleLow={currentResults.data.params?.blueScores?.autoSampleLow?.toString()}
+						blueAutoSampleHigh={currentResults.data.params?.blueScores?.autoSampleHigh?.toString()}
+						blueAutoSpecimenLow={currentResults.data.params?.blueScores?.autoSpecimenLow?.toString()}
+						blueAutoSpecimenHigh={currentResults.data.params?.blueScores?.autoSpecimenHigh?.toString()}
+						blue1AutoLocation={currentResults.data.params?.blueScores?.robot1Auto}
+						blue2AutoLocation={currentResults.data.params?.blueScores?.robot2Auto}
+						blueTeleop={currentResults.data.params?.blueScores?.teleopPoints?.toString()}
+						blueTeleopSampleNet={currentResults.data.params?.blueScores?.teleopSampleNet?.toString()}
+						blueTeleopSampleLow={currentResults.data.params?.blueScores?.teleopSampleLow?.toString()}
+						blueTeleopSampleHigh={currentResults.data.params?.blueScores?.teleopSampleHigh?.toString()}
+						blueTeleopSpecimenLow={currentResults.data.params?.blueScores?.teleopSpecimenLow?.toString()}
+						blueTeleopSpecimenHigh={currentResults.data.params?.blueScores?.teleopSpecimenHigh?.toString()}
+						blue1TeleopLocation={currentResults.data.params?.blueScores?.robot1Teleop}
+						blue2TeleopLocation={currentResults.data.params?.blueScores?.robot2Teleop}
+						blueFoulsReceived={currentResults.data.params?.redScores?.foulPointsCommitted?.toString()}
+						redAuto={currentResults.data.params?.redScores?.autoPoints?.toString()}
+						redAutoSampleNet={currentResults.data.params?.redScores?.autoSampleNet?.toString()}
+						redAutoSampleLow={currentResults.data.params?.redScores?.autoSampleLow?.toString()}
+						redAutoSampleHigh={currentResults.data.params?.redScores?.autoSampleHigh?.toString()}
+						redAutoSpecimenLow={currentResults.data.params?.redScores?.autoSpecimenLow?.toString()}
+						redAutoSpecimenHigh={currentResults.data.params?.redScores?.autoSpecimenHigh?.toString()}
+						red1AutoLocation={currentResults.data.params?.redScores?.robot1Auto}
+						red2AutoLocation={currentResults.data.params?.redScores?.robot2Auto}
+						redTeleop={currentResults.data.params?.redScores?.teleopPoints?.toString()}
+						redTeleopSampleNet={currentResults.data.params?.redScores?.teleopSampleNet?.toString()}
+						redTeleopSampleLow={currentResults.data.params?.redScores?.teleopSampleLow?.toString()}
+						redTeleopSampleHigh={currentResults.data.params?.redScores?.teleopSampleHigh?.toString()}
+						redTeleopSpecimenLow={currentResults.data.params?.redScores?.teleopSpecimenLow?.toString()}
+						redTeleopSpecimenHigh={currentResults.data.params?.redScores?.teleopSpecimenHigh?.toString()}
+						red1TeleopLocation={currentResults.data.params?.redScores?.robot1Teleop}
+						red2TeleopLocation={currentResults.data.params?.redScores?.robot2Teleop}
+						redFoulsReceived={currentResults.data.params?.blueScores?.foulPointsCommitted?.toString()}
+					/>
+				</div>
+			{/if}
+		</div>
+	</results>
+
 	<overlay class:hidden={currentResults?.state == ResultsState.FULL || !data}>
 		<pos id="blueSampleNet">
 			<ScoreBadge
@@ -964,76 +1029,11 @@
 
 		<shadow-rect></shadow-rect>
 	</overlay>
-
-	<results>
-		<div class="vstack container">
-			<div
-				id="await"
-				class:away={!(awaitResults.length > 0 && currentResults?.state != ResultsState.FULL)}
-			>
-				<Results state={ResultsState.AWAITING} name={displayAwaitResults.join('<br>')} />
-			</div>
-
-			{#if currentResults}
-				<div id="results" class:away={currentResults.state == ResultsState.HIDDEN}>
-					<Results
-						state={currentResults.state}
-						name={currentResults.data.params?.matchName}
-						blueScore={(
-							(currentResults.data.params?.blueScores?.preFoulTotal || 0) +
-							(currentResults.data.params?.redScores?.foulPointsCommitted || 0)
-						).toString()}
-						redScore={(
-							(currentResults.data.params?.redScores?.preFoulTotal || 0) +
-							(currentResults.data.params?.blueScores?.foulPointsCommitted || 0)
-						).toString()}
-						blueTeams={currentResults.data.params?.blue?.teams}
-						redTeams={currentResults.data.params?.red?.teams}
-						blueAuto={currentResults.data.params?.blueScores?.autoPoints?.toString()}
-						blueAutoSampleNet={currentResults.data.params?.blueScores?.autoSampleNet?.toString()}
-						blueAutoSampleLow={currentResults.data.params?.blueScores?.autoSampleLow?.toString()}
-						blueAutoSampleHigh={currentResults.data.params?.blueScores?.autoSampleHigh?.toString()}
-						blueAutoSpecimenLow={currentResults.data.params?.blueScores?.autoSpecimenLow?.toString()}
-						blueAutoSpecimenHigh={currentResults.data.params?.blueScores?.autoSpecimenHigh?.toString()}
-						blue1AutoLocation={currentResults.data.params?.blueScores?.robot1Auto}
-						blue2AutoLocation={currentResults.data.params?.blueScores?.robot2Auto}
-						blueTeleop={currentResults.data.params?.blueScores?.teleopPoints?.toString()}
-						blueTeleopSampleNet={currentResults.data.params?.blueScores?.teleopSampleNet?.toString()}
-						blueTeleopSampleLow={currentResults.data.params?.blueScores?.teleopSampleLow?.toString()}
-						blueTeleopSampleHigh={currentResults.data.params?.blueScores?.teleopSampleHigh?.toString()}
-						blueTeleopSpecimenLow={currentResults.data.params?.blueScores?.teleopSpecimenLow?.toString()}
-						blueTeleopSpecimenHigh={currentResults.data.params?.blueScores?.teleopSpecimenHigh?.toString()}
-						blue1TeleopLocation={currentResults.data.params?.blueScores?.robot1Teleop}
-						blue2TeleopLocation={currentResults.data.params?.blueScores?.robot2Teleop}
-						blueFoulsReceived={currentResults.data.params?.redScores?.foulPointsCommitted?.toString()}
-						redAuto={currentResults.data.params?.redScores?.autoPoints?.toString()}
-						redAutoSampleNet={currentResults.data.params?.redScores?.autoSampleNet?.toString()}
-						redAutoSampleLow={currentResults.data.params?.redScores?.autoSampleLow?.toString()}
-						redAutoSampleHigh={currentResults.data.params?.redScores?.autoSampleHigh?.toString()}
-						redAutoSpecimenLow={currentResults.data.params?.redScores?.autoSpecimenLow?.toString()}
-						redAutoSpecimenHigh={currentResults.data.params?.redScores?.autoSpecimenHigh?.toString()}
-						red1AutoLocation={currentResults.data.params?.redScores?.robot1Auto}
-						red2AutoLocation={currentResults.data.params?.redScores?.robot2Auto}
-						redTeleop={currentResults.data.params?.redScores?.teleopPoints?.toString()}
-						redTeleopSampleNet={currentResults.data.params?.redScores?.teleopSampleNet?.toString()}
-						redTeleopSampleLow={currentResults.data.params?.redScores?.teleopSampleLow?.toString()}
-						redTeleopSampleHigh={currentResults.data.params?.redScores?.teleopSampleHigh?.toString()}
-						redTeleopSpecimenLow={currentResults.data.params?.redScores?.teleopSpecimenLow?.toString()}
-						redTeleopSpecimenHigh={currentResults.data.params?.redScores?.teleopSpecimenHigh?.toString()}
-						red1TeleopLocation={currentResults.data.params?.redScores?.robot1Teleop}
-						red2TeleopLocation={currentResults.data.params?.redScores?.robot2Teleop}
-						redFoulsReceived={currentResults.data.params?.blueScores?.foulPointsCommitted?.toString()}
-					/>
-				</div>
-			{/if}
-		</div>
-	</results>
 </main>
 
 <style>
 	main {
 		overflow: hidden;
-		z-index: -2;
 	}
 
 	.hidden {
@@ -1047,6 +1047,8 @@
 	}
 
 	results {
+		z-index: 1;
+		
 		.container {
 			position: absolute;
 			display: flex;

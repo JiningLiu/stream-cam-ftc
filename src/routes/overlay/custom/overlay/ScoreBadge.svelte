@@ -110,7 +110,6 @@
 	.lgIcon {
 		margin-top: 0.05vw;
 		position: relative;
-		z-index: 1;
 		font-size: 1.6vw;
 		font-weight: 400;
 	}
@@ -120,7 +119,6 @@
 		margin-top: 0.05vw;
 		text-align: center;
 		position: absolute;
-		z-index: 2;
 		font-size: 0.8vw;
 		font-weight: 600;
 	}
