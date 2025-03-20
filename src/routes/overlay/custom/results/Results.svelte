@@ -1,19 +1,8 @@
 <svelte:options customElement="results-component" />
 
 <script lang="ts">
-	import QRCode from 'qrcode';
 	import { onMount } from 'svelte';
-
-	onMount(() => {
-		// replace with real
-		let canvas = document.getElementById('qr');
-
-		QRCode.toCanvas(canvas, 'https://ftc.events/2024/USTXTBSQ', {
-			margin: 0,
-			scale: 8,
-			color: { dark: '#FFFFFFFF', light: '#00000000' }
-		});
-	});
+	import QRCode from 'qrcode';
 
 	import { ResultsState, resultsStatusIsAwait, resultsStatusIsNotFull } from '$lib/types';
 
@@ -71,6 +60,20 @@
 		leagueRanking?: number;
 		rankMove?: string;
 	};
+
+	onMount(() => {
+		let canvas = document.getElementById('qr');
+
+		QRCode.toCanvas(
+			canvas,
+			`https://ftc.events/2024/${eventCode}/${matchType}/${matchNumber}${matchType == 'playoff' ? '/1' : ''}`,
+			{
+				margin: 0,
+				scale: 8,
+				color: { dark: '#FFFFFFFF', light: '#00000000' }
+			}
+		);
+	});
 
 	function process(location: string): string {
 		switch (location) {
@@ -134,13 +137,13 @@
 
 		<div id="scores" class="hstack" class:hidden={resultsStatusIsAwait(state)}>
 			<h1 class="blue score">
-				<div class:hidden={+redScore >= +blueScore} class="crown">􀦆</div>
-				<span style="z-index:1">{blueScore}</span>
+				<span class:hidden={+redScore >= +blueScore} class="crown">􀦆&nbsp;</span>
+				<span>{blueScore}</span>
 			</h1>
 
 			<h1 class="red score">
-				<div class:hidden={+redScore <= +blueScore} class="crown">􀦆</div>
-				<span style="z-index:1">{redScore}</span>
+				<span>{redScore}</span>
+				<span class:hidden={+redScore <= +blueScore} class="crown">&nbsp;􀦆</span>
 			</h1>
 		</div>
 
@@ -486,6 +489,15 @@
 		white-space: nowrap;
 	}
 
+	.crown {
+		font-size: 1.2vw;
+		color: rgb(230, 230, 0);
+
+		&.hidden {
+			display: none;
+		}
+	}
+
 	.score-row {
 		width: calc(100% + 0.8vw);
 		max-height: 1.8vw;
@@ -571,15 +583,6 @@
 
 	.section.hidden {
 		margin: -0.4vw 0;
-	}
-
-	.crown {
-		margin-top: 0.2vw;
-		font-size: 3.6vw;
-		color: rgb(220, 220, 0);
-		opacity: 0.75;
-		position: absolute;
-		z-index: 0;
 	}
 
 	separator {
