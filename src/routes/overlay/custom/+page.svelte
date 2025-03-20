@@ -247,7 +247,7 @@
 		}
 	}
 
-	//data
+	// data
 	interface ResultsItem {
 		id: string;
 		data: GameUpdate;
@@ -268,6 +268,7 @@
 
 	const timer = new CountdownTimer();
 
+	let eventCode = 'UNKNOWN';
 	let socket: WebSocket;
 
 	let startX = 0; //temp x for drag
@@ -276,10 +277,15 @@
 	let lastX = 0;
 	let lastY = 0;
 	let isSafari = false;
+
 	onMount(() => {
 		const paramsString = `?${new URLSearchParams(location.search).get('parameters')}`;
 		const params = new URLSearchParams(paramsString);
 
+		eventCode = new URLSearchParams(
+			new URLSearchParams(new URL(params.get('socketUrl') || '').search)
+		).get('code') || 'UNKNOWN';
+		
 		if (params.get('safari') == null) {
 			params.append(
 				'safari',
@@ -852,6 +858,9 @@
 			{#if currentResults}
 				<div id="results" class:away={currentResults.state == ResultsState.HIDDEN}>
 					<Results
+						{eventCode}
+						matchType={currentResults.data.params?.elims ? 'playoff' : 'qual'}
+						matchNumber={currentResults.data.params?.number?.toString()}
 						state={currentResults.state}
 						name={currentResults.data.params?.matchName}
 						blueScore={(

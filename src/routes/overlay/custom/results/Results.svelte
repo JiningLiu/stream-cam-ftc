@@ -1,22 +1,26 @@
 <svelte:options customElement="results-component" />
 
 <script lang="ts">
-	// import QRCode from 'qrcode';
-	// import { onMount } from 'svelte';
+	import QRCode from 'qrcode';
+	import { onMount } from 'svelte';
 
-	// onMount(() => {
-	// 	let canvas = document.getElementById('qr');
+	onMount(() => {
+		// replace with real
+		let canvas = document.getElementById('qr');
 
-	// 	QRCode.toCanvas(canvas, 'https://ftc.events/2024/USTXTBSQ', {
-	// 		margin: 0,
-	// 		scale: 4,
-	// 		color: { dark: '#FFFFFFFFFF', light: '#11111100' }
-	// 	});
-	// });
+		QRCode.toCanvas(canvas, 'https://ftc.events/2024/USTXTBSQ', {
+			margin: 0,
+			scale: 8,
+			color: { dark: '#FFFFFFFF', light: '#00000000' }
+		});
+	});
 
 	import { ResultsState, resultsStatusIsAwait, resultsStatusIsNotFull } from '$lib/types';
-	
+
 	let {
+		eventCode = 'UNKNOWN',
+		matchType = 'UNKNOWN',
+		matchNumber = 'UNKNOWN',
 		state = ResultsState.AWAITING,
 		name = 'Previous Match',
 		blueTeams = [] as Team[],
@@ -284,30 +288,25 @@
 			<h3 class="red-fouls w-100">{+redFoulsReceived > 0 ? '+' : ''}{redFoulsReceived}</h3>
 		</div>
 
-		<!-- <canvas id="qr" style=""></canvas> -->
+		{#if !resultsStatusIsAwait(state)}
+			<separator id="qr-separator"></separator>
+
+			<div id="qr-container" class="hstack vcenter space-between">
+				<div class="vstack">
+					<h4>View full match results by visiting:</h4>
+					<p>
+						https://ftc.events/2024/
+						{eventCode}/{matchType}/{matchNumber}{matchType == 'playoff' ? '/1' : ''}
+					</p>
+				</div>
+				<canvas id="qr" style=""></canvas>
+			</div>
+		{/if}
 	</div>
 </container>
 <slot />
 
 <style>
-	.crown {
-		margin-top: 0.2vw;
-		font-size: 3.6vw;
-		color: rgb(220, 220, 0);
-		opacity: 0.75;
-		position: absolute;
-		z-index: 0;
-	}
-
-	.right {
-		float: right;
-	}
-
-	/* #qr {
-		z-index: 1000;
-		margin: 10px;
-	} */
-
 	container {
 		display: flex;
 		align-items: center;
@@ -574,11 +573,44 @@
 		margin: -0.4vw 0;
 	}
 
+	.crown {
+		margin-top: 0.2vw;
+		font-size: 3.6vw;
+		color: rgb(220, 220, 0);
+		opacity: 0.75;
+		position: absolute;
+		z-index: 0;
+	}
+
 	separator {
 		width: calc(100% + 0.8vw);
-		margin: -0.1vw 0 -0.1vw 0;
+		margin: -0.04vw 0 -0.04vw 0;
 		padding: 0;
 		height: 0.08vw;
 		background-color: #333;
+	}
+
+	#qr-container {
+		width: calc(100% + 0.8vw);
+		gap: 0.2vw;
+
+		div {
+			margin-left: 0.2vw;
+			gap: 0.4vw;
+
+			h4 {
+				font-size: 0.9vw;
+			}
+
+			p {
+				font-size: 0.9vw;
+			}
+		}
+
+		#qr {
+			margin: 0.4vw;
+			width: 6.4vw !important;
+			height: 6.4vw !important;
+		}
 	}
 </style>
