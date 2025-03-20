@@ -8,6 +8,7 @@
 
 	import { ResultsState } from '$lib/types';
 
+	import { pushState } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	import { v4 as uuidv4 } from 'uuid';
@@ -471,22 +472,23 @@
 		}
 		// otherwise redirect to the builder
 		else {
-			location.href = './generate';
+			location.href = '../setup';
 		}
 	});
 
 	let setUpBadge = (element: HTMLElement, x: string | null, y: string | null) => {
-		// if it is a number and it is in vw, then allow it to work, otherwise set it to 0
+		// if it is a number, assume unit of vw and set its css property variable
 
-		if (x != null && isNaN(Number(x.replace('vw', ''))) && x.includes('vw')) {
-			element.style.setProperty('--x', x);
+		if (x != null && x.trim().length > 0 && !isNaN(+x)) {
+			element.style.setProperty('--x', x.replace('vw', '') + 'vw');
 		} else {
-			element.style.setProperty('--x', 0 + 'vw');
+			element.style.setProperty('--x', '0vw');
 		}
-		if (y != null && isNaN(Number(y.replace('vw', ''))) && y.includes('vw')) {
-			element.style.setProperty('--y', y);
+
+		if (y != null && y.trim().length > 0 && !isNaN(+y)) {
+			element.style.setProperty('--y', y.replace('vw', '') + 'vw');
 		} else {
-			element.style.setProperty('--y', 0 + 'vw');
+			element.style.setProperty('--y', '0vw');
 		}
 
 		// set up drag i guess
@@ -529,6 +531,23 @@
 				// set the style properties (x,y)
 				style.setProperty('--x', String(x) + 'vw');
 				style.setProperty('--y', String(y) + 'vw');
+
+				// Get the existing parameters
+				const existingParams = new URLSearchParams(
+					decodeURIComponent(new URLSearchParams(location.search).get('parameters') || '')
+				);
+
+				// Update only the X and Y values for this element
+				existingParams.set(`${element.id}X`, String(x));
+				existingParams.set(`${element.id}Y`, String(y));
+
+				// Create the new URL with all parameters preserved
+				pushState(
+					location.href.split('?')[0] +
+						'?parameters=' +
+						encodeURIComponent(existingParams.toString()),
+					''
+				);
 			});
 		}
 
@@ -562,6 +581,23 @@
 				// set the style properties (x,y)
 				style.setProperty('--x', String(x) + 'vw');
 				style.setProperty('--y', String(y) + 'vw');
+
+				// Get the existing parameters
+				const existingParams = new URLSearchParams(
+					decodeURIComponent(new URLSearchParams(location.search).get('parameters') || '')
+				);
+
+				// Update only the X and Y values for this element
+				existingParams.set(`${element.id}X`, String(x));
+				existingParams.set(`${element.id}Y`, String(y));
+
+				// Create the new URL with all parameters preserved
+				pushState(
+					location.href.split('?')[0] +
+						'?parameters=' +
+						encodeURIComponent(existingParams.toString()),
+					''
+				);
 			});
 		}
 	};
@@ -1048,7 +1084,7 @@
 
 	results {
 		z-index: 1;
-		
+
 		.container {
 			position: absolute;
 			display: flex;

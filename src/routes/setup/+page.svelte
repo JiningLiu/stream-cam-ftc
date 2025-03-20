@@ -66,7 +66,7 @@
 				}
 			});
 		});
-		document.getElementById("safariBox")?.addEventListener('change', (event) => {
+		document.getElementById('safariBox')?.addEventListener('change', (event) => {
 			updateOverlay();
 		});
 	});
@@ -163,15 +163,90 @@
 	}
 
 	function copyEntireUrl() {
-		navigator.clipboard.writeText(entireUrl);
+		try {
+			const overlayFrame = document.getElementById('overlay') as HTMLIFrameElement;
+			if (overlayFrame && overlayFrame.contentWindow) {
+				overlayUrl = overlayFrame.contentWindow.location.href;
+
+				const camParams = new URL(camUrl).search.replace('?parameters=', '');
+				const overlayParams = new URL(overlayUrl).search.replace('?parameters=', '');
+				entireUrl = `http://${encodeURIComponent(location.hostname)}${
+					encodeURIComponent(location.port) ? ':' : ''
+				}${encodeURIComponent(location.port)}/?camParams=${encodeURIComponent(camParams)}&overlayParams=${encodeURIComponent(overlayParams)}`;
+			}
+		} catch (e) {
+			console.error('Could not access iframe URL:', e);
+		}
+
+		copyTextToClipboard(entireUrl);
 	}
 
 	function copyCamUrl() {
-		navigator.clipboard.writeText(camUrl);
+		copyTextToClipboard(camUrl);
 	}
 
 	function copyOverlayUrl() {
-		navigator.clipboard.writeText(overlayUrl);
+		try {
+			const overlayFrame = document.getElementById('overlay') as HTMLIFrameElement;
+			if (overlayFrame && overlayFrame.contentWindow) {
+				overlayUrl = overlayFrame.contentWindow.location.href;
+
+				const camParams = new URL(camUrl).search.replace('?parameters=', '');
+				const overlayParams = new URL(overlayUrl).search.replace('?parameters=', '');
+				entireUrl = `http://${encodeURIComponent(location.hostname)}${
+					encodeURIComponent(location.port) ? ':' : ''
+				}${encodeURIComponent(location.port)}/?camParams=${encodeURIComponent(camParams)}&overlayParams=${encodeURIComponent(overlayParams)}`;
+
+				copyTextToClipboard(overlayUrl);
+			} else {
+				console.error('Could not access iframe URL:');
+				copyTextToClipboard(overlayUrl);
+			}
+		} catch (e) {
+			console.error('Could not access iframe URL:', e);
+			copyTextToClipboard(overlayUrl);
+		}
+	}
+
+	function copyTextToClipboard(text: string) {
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard
+				.writeText(text)
+				.then(() => {
+					console.log('Text copied to clipboard');
+				})
+				.catch((err) => {
+					console.error('Failed to copy: ', err);
+					fallbackCopyTextToClipboard(text);
+				});
+		} else {
+			fallbackCopyTextToClipboard(text);
+		}
+	}
+
+	function fallbackCopyTextToClipboard(text: string) {
+		const textArea = document.createElement('textarea');
+		textArea.value = text;
+
+		textArea.style.position = 'fixed';
+		textArea.style.left = '-999999px';
+		textArea.style.top = '-999999px';
+		document.body.appendChild(textArea);
+		textArea.focus();
+		textArea.select();
+
+		try {
+			const successful = document.execCommand('copy');
+			if (successful) {
+				console.log('Text copied to clipboard (fallback)');
+			} else {
+				console.error('Failed to copy text (fallback)');
+			}
+		} catch (err) {
+			console.error('Failed to copy: ', err);
+		}
+
+		document.body.removeChild(textArea);
 	}
 
 	function importFromUrl() {
