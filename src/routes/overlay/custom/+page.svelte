@@ -286,18 +286,11 @@
 			new URLSearchParams(new URL(params.get('socketUrl') || '').search)
 		).get('code') || 'UNKNOWN';
 		
-		if (params.get('safari') == null) {
-			params.append(
-				'safari',
-				String(
-					confirm(
-						'would you like to go to the alternate version of the overlay? The main drag and drop system is not supported in some browsers, but the alternate version is more computer intensive'
-					)
-				)
-			);
+		if (params.get('safari') != null) {
+			isSafari = params.get('safari') == 'true';
 		}
 
-		isSafari = params.get('safari') == 'true';
+		
 
 		// if there are elements for each tag, then it will set the locations for that element
 		const suppliedInfoBannerText = params.get('infoBannerText');
