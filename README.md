@@ -8,7 +8,7 @@
 </b>
 </p>
 
-> ### 🚧 This project is in early development. Please check back for more information.
+> ### This project was ended in early development. A new system is in development.
 
 ## Development
 
